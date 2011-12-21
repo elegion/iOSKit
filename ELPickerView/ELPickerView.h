@@ -1,5 +1,5 @@
 //
-//  YSPickerView.h
+//  ELPickerView.h
 //  
 //
 //  Created by Yarik Smirnov on 12/12/11.
@@ -9,7 +9,7 @@
 @class ELPickerView;
 @protocol ELPickerViewDelegate <NSObject>
 
-- (void)pickerView:(YSPickerView *)pickerView didSelectValue:(NSInteger)value;
+- (void)pickerView:(ELPickerView *)pickerView didSelectValue:(NSInteger)value;
 
 - (void)pickerViewWillBeginScrollingAnimation;
 - (void)pickerViewDidiEndScrollingAnimation;
