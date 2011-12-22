@@ -264,7 +264,7 @@ static CGFloat  const KDefaultScrollInset = 30;
 //    CGContextScaleCTM(context, 1, -1);
 //    
 //    CGContextClearRect(context, rect);
-//    CGContextSetFillColorWithColor(context, YSColorFromHex(0xc030ac));
+//    CGContextSetFillColorWithColor(context, YSColorCreateFromHex(0xc030ac));
 //    CGContextSetLineWidth(context, 2.0);
 //    CGPathRef path = CGPathCreateWithRect(rect, NULL);
 //    CGContextAddPath(context, path);
@@ -323,7 +323,7 @@ static CGFloat  const KDefaultScrollInset = 30;
     if (_shadowColor == 0x0) {
         opacity = 37;
     }
-    CGContextSetFillColorWithColor(myContext, YSColorFromHex(_digitColor));
+    CGContextSetFillColorWithColor(myContext, YSColorCreateFromHex(_digitColor));
     
     // Setting center text aligment
     CGContextSetTextPosition(myContext, 0, 0);
@@ -333,7 +333,7 @@ static CGFloat  const KDefaultScrollInset = 30;
     CGFloat xPosition = (self.bounds.size.width - endTextPosition.x) / 2;
     
     CGContextSaveGState(myContext);
-    CGContextSetShadowWithColor(myContext, _shadowOffset, 0, YSColorFromHexAndAlpha(_shadowColor, opacity));
+    CGContextSetShadowWithColor(myContext, _shadowOffset, 0, YSColorCreateFromHexAndAlpha(_shadowColor, opacity));
     CGContextSetTextDrawingMode (myContext, kCGTextFill);
     CGContextShowTextAtPoint (myContext, floorf(xPosition) , 10, [_stringValue cStringUsingEncoding:NSUTF8StringEncoding], [_stringValue length]);
     CGContextRestoreGState(myContext);
@@ -366,7 +366,7 @@ static CGFloat  const KDefaultScrollInset = 30;
     CGContextClearRect(context, rect);
     
     CGFloat location[2] = {0.0, 1.0};
-    CGColorRef colorValues[2] = {YSColorFromHexAndAlpha(0xCCCCCC, 30), YSColorFromHexAndAlpha(0xCCCCCC, 0)};
+    CGColorRef colorValues[2] = {YSColorCreateFromHexAndAlpha(0xCCCCCC, 30), YSColorCreateFromHexAndAlpha(0xCCCCCC, 0)};
     CFArrayRef colors = CFArrayCreate(kCFAllocatorDefault, (void *)colorValues, 2, NULL);
     
     CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
@@ -416,7 +416,7 @@ static CGFloat  const KDefaultScrollInset = 30;
     
     CGContextRestoreGState(context);
     
-    CGContextSetStrokeColorWithColor(context, YSColorFromHex(0xFFFFFF));
+    CGContextSetStrokeColorWithColor(context, YSColorCreateFromHex(0xFFFFFF));
     CGContextSetLineWidth(context, 1.0);
     
     CGContextAddRect(context, CGRectMake(self.bounds.origin.x + 6/2, self.bounds.origin.y + 6/2, self.bounds.size.width - 12/2, self.bounds.size.height - 12/2));
