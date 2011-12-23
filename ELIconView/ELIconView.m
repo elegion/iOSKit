@@ -37,6 +37,7 @@
     YSPathAddRoundedStrechedRect(clipPath, 9.0, rect);
     CGContextSetLineWidth(context, 9.0);
     CGContextAddPath(context, clipPath);
+    CGPathRelease(clipPath);
         
     CGContextSaveGState(context);
     CGContextClip(context);

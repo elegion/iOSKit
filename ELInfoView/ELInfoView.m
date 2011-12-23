@@ -136,7 +136,7 @@ static CGFloat const kHideAlphaValue = 0.0;
     CGContextAddPath(context, path);
     CGContextClip(context);
 
-    CGContextSetFillColorWithColor(context, YSColorCreateFromHexAndAlpha(0x0, 70));
+    CGContextSetFillColorWithColor(context, YSColorGetFromHexAndAlpha(0x0, 70));
     CGContextFillRect(context, rect);
     
 }
