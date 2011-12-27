@@ -76,6 +76,11 @@ static CGFloat const kHideAlphaValue = 0.0;
             [_message release];
         }
         self.alpha = 0;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self 
+                                                 selector:@selector(dismiss) 
+                                                     name:UIKeyboardWillShowNotification 
+                                                   object:nil];
     }
     return self;
 }
@@ -84,8 +89,14 @@ static CGFloat const kHideAlphaValue = 0.0;
     [self showWithInterval:kDefaultHideAnimationDelay];
 }
 
+- (void)dismiss {
+    self.hidden = YES;
+    [self dismissFromScreen];
+}
+
 - (void)showWithInterval:(NSTimeInterval)showTime {
     [self makeKeyAndVisible];
+    [self resignKeyWindow];
     [self animateAlphaToValue:kVisibleAlphaValue withDelay:showTime];
 }
 
@@ -142,8 +153,10 @@ static CGFloat const kHideAlphaValue = 0.0;
     
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self 
+                                                    name:UIKeyboardWillShowNotification 
+                                                  object:nil];
 	[super dealloc];
 }
 
