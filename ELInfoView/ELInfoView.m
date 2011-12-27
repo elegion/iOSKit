@@ -41,7 +41,7 @@ static CGFloat const kHideAlphaValue = 0.0;
     
     self = [super init];
     if (self) {
-        UIFont *helveticaNeueTitle = [UIFont fontWithName:@"HelveticaNeue" size:18];
+        UIFont *helveticaNeueTitle = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18];
         UIFont *helveticaNeueMessage = [UIFont fontWithName:@"HelveticaNeue" size:16];
         CGSize sizeOfTitle = [title sizeWithFont:helveticaNeueTitle constrainedToSize:CGSizeMake(kDefaultInfoViewWidth - 2*kDefaultTextMargin, 10000) lineBreakMode:UILineBreakModeTailTruncation];
         CGSize sizeOfMessage = [message sizeWithFont:helveticaNeueMessage constrainedToSize:CGSizeMake(kDefaultInfoViewWidth - 2*kDefaultTextMargin, 10000) lineBreakMode:UILineBreakModeTailTruncation];
