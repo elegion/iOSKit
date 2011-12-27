@@ -29,6 +29,7 @@ static CGFloat const kHideAlphaValue = 0.0;
 
 - (void)animateAlphaToValue:(CGFloat)alpha withDelay:(NSTimeInterval)interval;
 - (void)dismissFromScreen;
+- (void)dismiss;
 
 @end
 
@@ -76,7 +77,8 @@ static CGFloat const kHideAlphaValue = 0.0;
             [_message release];
         }
         self.alpha = 0;
-        
+        self.userInteractionEnabled = YES;
+        self.windowLevel = UIWindowLevelAlert;
         [[NSNotificationCenter defaultCenter] addObserver:self 
                                                  selector:@selector(dismiss) 
                                                      name:UIKeyboardWillShowNotification 
@@ -89,14 +91,20 @@ static CGFloat const kHideAlphaValue = 0.0;
     [self showWithInterval:kDefaultHideAnimationDelay];
 }
 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self dismiss];
+}
+
+
+
 - (void)dismiss {
     self.hidden = YES;
     [self dismissFromScreen];
 }
 
 - (void)showWithInterval:(NSTimeInterval)showTime {
-    [self makeKeyAndVisible];
-    [self resignKeyWindow];
+    [self setHidden:NO];
+    self.windowLevel = UIWindowLevelAlert;
     [self animateAlphaToValue:kVisibleAlphaValue withDelay:showTime];
 }
 
@@ -112,7 +120,7 @@ static CGFloat const kHideAlphaValue = 0.0;
 
 - (void)animateAlphaToValue:(CGFloat)alpha withDelay:(NSTimeInterval)interval {
     if ([UIView respondsToSelector:@selector(animateWithDuration:delay:options:animations:completion:)]) {
-        [UIView animateWithDuration:kDefaultTransitionInterval delay:(alpha != 0 ? 0.0 : interval) options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState |UIViewAnimationOptionAllowUserInteraction animations:^{
+        [UIView animateWithDuration:kDefaultTransitionInterval delay:(alpha != 0 ? 0.0 : interval) options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction animations:^{
                 self.alpha = alpha;
             } completion:^(BOOL finished) {
                 [self animationDidStop:nil finished:[NSNumber numberWithBool:finished] context:(NSTimeInterval *)&interval];
