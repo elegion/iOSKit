@@ -8,6 +8,7 @@
 
 #import "ELSwipeController.h"
 #import "YSDrawingKit.h"
+#import <CoreText/CoreText.h>
 #include "math.h"
 
 @interface ELSwipeBar : UIView <UIScrollViewDelegate> {
@@ -15,9 +16,25 @@
     NSString    *_rightTitle;
     NSString    *_centerTitle;
     CGFloat     _globalScrollShift;
+    
+    CGColorRef  _textColor;
+    CGColorRef  _shadowColor;
+    CGColorRef  _backgroundColor;
+    
+    CGImageRef  _backgroundImage;
+    
+    CGFloat     _fontSize;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView withRight:(NSString *)rTitle center:(NSString *)cTitle left:(NSString *)lTitle;
+
+- (void)setTextColor:(CGColorRef)textColor;
+
+- (void)setShadowColor:(CGColorRef)shadowColor;
+
+- (void)setBackgroundColor:(CGColorRef)backgroundColor;
+
+- (void)setBackgroundImage:(CGImageRef)image;
 
 @end
 
@@ -29,6 +46,13 @@
 
 @implementation ELSwipeController
 
+@synthesize titleColor = _titleColor;
+@synthesize shadowColor = _shadowColor;
+@synthesize fontSize = _fontSize;
+@synthesize titleBackgroundColor = _titleBackgroundColor;
+@synthesize backgroundColor = _backgroundColor;
+@synthesize titlesBackgroundImage = _titlesBackgroundImage;
+
 - (id)initWithControllersStack:(NSArray *)controllers {
     if (!controllers) {
         NSAssert(controllers, @"Controllers must not be nil.");
@@ -37,6 +61,30 @@
     self = [super init];
     if (self) {
         _controllers = [controllers mutableCopy];
+        
+        UIScreen *screen = [UIScreen mainScreen];
+        
+        UIApplication *app = [UIApplication sharedApplication];
+        
+        CGSize size = CGSizeMake(screen.bounds.size.width, screen.bounds.size.height - self.navigationController.navigationBar.frame.size.height - self.tabBarController.tabBar.frame.size.height - app.statusBarFrame.size.height);
+        
+        CGRect mainViewFrame = CGRectZero;
+        
+        mainViewFrame = YSRectSetSize(mainViewFrame, size);
+        
+        _controllersContainer = [[UIScrollView alloc] initWithFrame:mainViewFrame];
+        _controllersContainer.pagingEnabled = YES;
+        _controllersContainer.delegate = self;
+        _controllersContainer.showsVerticalScrollIndicator = NO;
+        _controllersContainer.showsHorizontalScrollIndicator = NO;
+        _controllersContainer.contentSize = CGSizeMake(_controllersContainer.frame.size.width * [_controllers count] + 1, _controllersContainer.contentSize.height);
+        
+        _swipeBar = [[ELSwipeBar alloc] init];
+        _swipeDelegate = _swipeBar;
+        
+        _controllersContainer.frame  = YSRectSetHeight(_controllersContainer.frame, CGRectGetHeight(_controllersContainer.frame) - CGRectGetHeight(_swipeBar.frame));
+        _controllersContainer.frame = YSRectSetOriginY(_controllersContainer.frame, CGRectGetHeight(_swipeBar.frame));
+
     }
     return self;
 }
@@ -44,30 +92,8 @@
 - (void)loadView {
     [super loadView];
     
-    UIScreen *screen = [UIScreen mainScreen];
-    
-    UIApplication *app = [UIApplication sharedApplication];
-    
-    CGSize size = CGSizeMake(screen.bounds.size.width, screen.bounds.size.height - self.navigationController.navigationBar.frame.size.height - self.tabBarController.tabBar.frame.size.height - app.statusBarFrame.size.height);
-    
-    CGRect mainViewFrame = CGRectZero;
-    
-    mainViewFrame = YSRectSetSize(mainViewFrame, size);
-    
-    _controllersContainer = [[UIScrollView alloc] initWithFrame:mainViewFrame];
-    _controllersContainer.pagingEnabled = YES;
-    _controllersContainer.delegate = self;
-    _controllersContainer.showsVerticalScrollIndicator = NO;
-    _controllersContainer.showsHorizontalScrollIndicator = NO;
-    _controllersContainer.contentSize = CGSizeMake(_controllersContainer.frame.size.width * [_controllers count] + 1, _controllersContainer.contentSize.height);
-    
-    _swipeBar = [[ELSwipeBar alloc] init];
     [self.view addSubview:_swipeBar];
-    _swipeDelegate = _swipeBar;
     [_swipeBar release];
-    
-    _controllersContainer.frame  = YSRectSetHeight(_controllersContainer.frame, CGRectGetHeight(_controllersContainer.frame) - CGRectGetHeight(_swipeBar.frame));
-    _controllersContainer.frame = YSRectSetOriginY(_controllersContainer.frame, CGRectGetHeight(_swipeBar.frame));
     
     for (int i = 0; i < [_controllers count]; i++) {
         UIViewController *viewController = [_controllers objectAtIndex:i];
@@ -135,6 +161,22 @@
     }
 }
 
+- (void)setTitlesBackgroundImage:(UIImage *)titlesBackgroundImage {
+    [_swipeBar setBackgroundImage:titlesBackgroundImage.CGImage];
+}
+
+- (void)setTitleColor:(UIColor *)titleColor {
+    [_swipeBar setTextColor:titleColor.CGColor];
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    [_swipeBar setBackgroundColor:backgroundColor.CGColor];
+}
+
+- (void)setShadowColor:(UIColor *)shadowColor {
+    [_swipeBar setShadowColor:shadowColor.CGColor];
+}
+
 
 @end
 
@@ -143,14 +185,23 @@ static NSInteger const kTitlesPositionRange = 160;
 static CGFloat const kHorizontalMargin = 20.0;
 static CGFloat const kYarikMagicNumber = 101.8592;
 
-static CGFloat const kAdditionScaleFactor = 0.2;
+static CGFloat const kAdditionScaleFactor = 0.4;
 
 @implementation ELSwipeBar
 
 - (id)init {
-    self = [super initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
+    self = [super initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 17)];
     if (self) {
         self.opaque = YES;
+    
+        _fontSize = 8.0;
+        
+        _backgroundColor = YSColorGetFromHex(0xFFFFFF);
+        CGColorRetain(_backgroundColor);
+        _textColor = YSColorGetFromHex(0x0);
+        CGColorRetain(_textColor);
+        _shadowColor = YSColorGetFromHex(0x777777);
+        CGColorRetain(_shadowColor);
     }
     return self;
 }
@@ -174,8 +225,6 @@ static CGFloat const kAdditionScaleFactor = 0.2;
     [self setNeedsDisplay];
 }
 
-
-
 CGAffineTransform scaleFunction(CGFloat x);
 
 CGFloat positionFunction(CGFloat x, CGFloat a, CGFloat verticalShift, CGFloat rangeShift,  Boolean debug);
@@ -186,24 +235,67 @@ CGFloat positionFunction(CGFloat x, CGFloat a, CGFloat verticalShift, CGFloat ra
     CGContextTranslateCTM(context, 0, CGRectGetHeight(rect));
     CGContextScaleCTM(context, 1, -1);
     
-    CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);
-    CGContextFillRect(context, rect);
-        
-    CGContextSelectFont(context, "Helvetica", 14, kCGEncodingMacRoman);
-    
-    CGContextSetTextDrawingMode(context, kCGTextInvisible);
-    CGContextSetTextPosition(context, 0, 0);
-    CGContextShowText(context, [_centerTitle cStringUsingEncoding:NSUTF8StringEncoding], [_centerTitle length]);
-    CGPoint centerWidth = CGContextGetTextPosition(context);
+    CGContextClearRect(context, rect);
 
-    CGContextSetTextPosition(context, 0, 0);
-    CGContextShowText(context, [_rightTitle cStringUsingEncoding:NSUTF8StringEncoding], [_rightTitle length]);
-    CGPoint rigthWidth = CGContextGetTextPosition(context);
+    if (_backgroundImage) {
+        
+        size_t imageWidth = CGImageGetWidth(_backgroundImage);
+        size_t imageHeght = CGImageGetHeight(_backgroundImage);
+        CGSize imageSize = CGSizeMake(imageWidth, imageHeght);
+        CGRect imageRect = CGRectMake(0, 0, imageWidth, CGRectGetHeight(rect));
+        
+        CGLayerRef bgLayer = CGLayerCreateWithContext(context, imageSize, NULL);
+        CGContextRef layerContext = CGLayerGetContext(bgLayer);
+        
+        CGContextDrawImage(layerContext, imageRect, _backgroundImage);
+        
+        CGContextSaveGState(context);
+        for (int i = 0; i < rect.size.width / CGImageGetWidth(_backgroundImage); i++) {
+        
+            CGContextDrawLayerAtPoint(context, CGPointZero, bgLayer);
+            CGContextTranslateCTM(context, imageWidth, 0.0);
+            
+        }
+        CGContextRestoreGState(context);
+        
+        CGLayerRelease(bgLayer);
+        
+    } else {
+        
+        CGContextSetFillColorWithColor(context, _backgroundColor);
+        CGContextFillRect(context, rect);
+    }
     
-    CGContextSetTextDrawingMode(context, kCGTextFill);
-    CGContextSetFillColorWithColor(context, YSColorGetFromHex(0xFFFFFF));
+    CFStringRef helveticaNeue = CFSTR("HelveticaNeue-Bold");
     
-    CGFloat verticalTextPorition = CGRectGetHeight(rect)/2 - 7;
+    CTFontRef font = CTFontCreateWithName(helveticaNeue, _fontSize, NULL);
+    
+    CFStringRef keys[] = { kCTFontAttributeName, kCTForegroundColorAttributeName };
+    CFTypeRef values[] = { font, _textColor };
+    
+    CFDictionaryRef attribs = CFDictionaryCreate(kCFAllocatorDefault, (const void **)&keys, (const void **)&values, sizeof(keys) / sizeof(keys[0]), &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    CFRelease(font);
+    
+    CFMutableAttributedStringRef leftString = CFAttributedStringCreateMutable(kCFAllocatorDefault, 0);
+    CFAttributedStringReplaceString(leftString, CFRangeMake(0, 0), (CFStringRef)_leftTitle);
+    CFAttributedStringSetAttributes(leftString, CFRangeMake(0, [_leftTitle length]), attribs, false);
+    CFMutableAttributedStringRef centerString = CFAttributedStringCreateMutable(kCFAllocatorDefault, 0);
+    CFAttributedStringReplaceString(centerString, CFRangeMake(0, 0), (CFStringRef)_centerTitle);
+    CFAttributedStringSetAttributes(centerString, CFRangeMake(0, [_centerTitle length]), attribs, false);
+    CFMutableAttributedStringRef rightString = CFAttributedStringCreateMutable(kCFAllocatorDefault, 0);
+    CFAttributedStringReplaceString(rightString, CFRangeMake(0, 0), (CFStringRef)_rightTitle);
+    CFAttributedStringSetAttributes(rightString, CFRangeMake(0, [_rightTitle length]), attribs, false);
+    
+    CFRelease(attribs);
+    
+    CTLineRef leftLine = CTLineCreateWithAttributedString(leftString);
+    CTLineRef centerLine = CTLineCreateWithAttributedString(centerString);
+    CTLineRef rightLine = CTLineCreateWithAttributedString(rightString);
+    
+    double centerWidth = CTLineGetTypographicBounds(centerLine, NULL, NULL, NULL);
+    double rightWidth = CTLineGetTypographicBounds(rightLine, NULL, NULL, NULL);
+    
+    CGFloat verticalTextPorition = CGRectGetHeight(rect) / 2 - _fontSize / 2;
 
     // We using function to determine x position of text
     // The function with respect to x (position function), 
@@ -215,28 +307,61 @@ CGFloat positionFunction(CGFloat x, CGFloat a, CGFloat verticalShift, CGFloat ra
     //
     // a - value for x = 0, whitch gives vertical shift only for function edges,    
     // but not central point of function break;
-    //
-    
+    //    
     
     CGFloat leftShift = positionFunction(_globalScrollShift, - kTitlesPositionRange / 12, kHorizontalMargin + kTitlesPositionRange / 12, kTitlesPositionRange/6, false);
-    CGFloat centerShift = positionFunction(_globalScrollShift, - centerWidth.x / 2, kTitlesPositionRange, 2*kHorizontalMargin, false);        
-    CGFloat rightShift = positionFunction(_globalScrollShift, - rigthWidth.x + kTitlesPositionRange / 12, 2 * kTitlesPositionRange-kHorizontalMargin - kTitlesPositionRange / 12, kTitlesPositionRange / 6, false);
+    CGFloat centerShift = positionFunction(_globalScrollShift, - centerWidth / 2, kTitlesPositionRange, 2*kHorizontalMargin, false);        
+    CGFloat rightShift = positionFunction(_globalScrollShift, - rightWidth + kTitlesPositionRange / 12, 2 * kTitlesPositionRange-kHorizontalMargin - kTitlesPositionRange / 12, kTitlesPositionRange / 6, false);
     
-    CGContextSetTextMatrix(context, scaleFunction(leftShift));
+    CFRelease(leftLine);
+    CFRelease(centerLine);
+    CFRelease(rightLine);
+    
+    CGAffineTransform leftFontSize = scaleFunction(leftShift);
+    CGAffineTransform centerFontSize = scaleFunction(centerShift);
+    CGAffineTransform rightFontSize = scaleFunction(rightShift);
+    
+    CTFontRef leftFont = CTFontCreateWithName(helveticaNeue, _fontSize, &leftFontSize);
+    CTFontRef centerFont = CTFontCreateWithName(helveticaNeue, _fontSize, &centerFontSize);
+    CTFontRef rightFont = CTFontCreateWithName(helveticaNeue, _fontSize, &rightFontSize);
+    
+    CFAttributedStringSetAttribute(leftString, CFRangeMake(0, [_leftTitle length]), kCTFontAttributeName, leftFont);
+    CFAttributedStringSetAttribute(centerString, CFRangeMake(0, [_centerTitle length]), kCTFontAttributeName, centerFont);
+    CFAttributedStringSetAttribute(rightString, CFRangeMake(0, [_rightTitle length]), kCTFontAttributeName, rightFont);
+    
+    CFRelease(leftFont);
+    CFRelease(centerFont);
+    CFRelease(rightFont);
+    
+    leftLine = CTLineCreateWithAttributedString(leftString);
+    centerLine = CTLineCreateWithAttributedString(centerString);
+    rightLine = CTLineCreateWithAttributedString(rightString);
+    
+    CFRelease(leftString);
+    CFRelease(centerString);
+    CFRelease(rightString);
+    
+    CGContextSaveGState(context);
+    
+    CGContextSetShadowWithColor(context, CGSizeMake(0, -1), 1.0, _shadowColor);
+    
     CGContextSetTextPosition(context, leftShift, verticalTextPorition);
-    CGContextShowText(context, [_leftTitle cStringUsingEncoding:NSUTF8StringEncoding], [_leftTitle length]);
+    CTLineDraw(leftLine, context);
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-    
-    
-    CGContextSetTextMatrix(context, scaleFunction(centerShift));
+
     CGContextSetTextPosition(context, centerShift, verticalTextPorition);
-    CGContextShowText(context, [_centerTitle cStringUsingEncoding:NSUTF8StringEncoding], [_centerTitle length]);
+    CTLineDraw(centerLine, context);
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     
-    CGContextSetTextMatrix(context, scaleFunction(rightShift));
     CGContextSetTextPosition(context, rightShift, verticalTextPorition);
-    CGContextShowText(context, [_rightTitle cStringUsingEncoding:NSUTF8StringEncoding], [_rightTitle length]);
+    CTLineDraw(rightLine, context);
     
+    CGContextRestoreGState(context);
+    
+    
+    CFRelease(leftLine);
+    CFRelease(centerLine);
+    CFRelease(rightLine);
 }
 
 CGFloat positionFunction(CGFloat x, CGFloat a, CGFloat verticalShift, CGFloat rangeShift, Boolean debug) {
@@ -270,7 +395,28 @@ CGAffineTransform scaleFunction(CGFloat x) {
     if (x < 80 || x > 240 ) {
         return CGAffineTransformIdentity;
     }
-    return CGAffineTransformScale(CGAffineTransformIdentity ,1.0 + kAdditionScaleFactor * (sinf((x - 82) / 50)),1.0 + kAdditionScaleFactor * sinf((x - 82) / 50));
+    return CGAffineTransformMakeScale(1.0 + kAdditionScaleFactor * (sinf((x - 82) / 50)),1.0 + kAdditionScaleFactor * (sinf((x - 82) / 50)));
+}
+
+- (void)setTextColor:(CGColorRef)textColor {
+    CGColorRetain(textColor);
+    CGColorRelease(_textColor);
+    _textColor = textColor;
+}
+
+- (void)setShadowColor:(CGColorRef)shadowColor {
+    CGColorRelease(_shadowColor);
+    _shadowColor = CGColorRetain(shadowColor);
+}
+
+- (void)setBackgroundColor:(CGColorRef)backgroundColor {
+    CGColorRelease(_backgroundColor);
+    _backgroundColor = CGColorRetain(backgroundColor);
+}
+
+- (void)setBackgroundImage:(CGImageRef)image {
+    CGImageRelease(_backgroundImage);
+    _backgroundImage = CGImageRetain(image);
 }
 
 - (void)dealloc {

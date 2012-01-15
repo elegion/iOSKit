@@ -16,6 +16,12 @@
     ELSwipeBar      *_swipeBar;
     id              _swipeDelegate;
 }
+@property (nonatomic, retain) UIColor *titleColor; //Text color of controllers titles
+@property (nonatomic, retain) UIColor *shadowColor; //Shadow color of the controllers titles
+@property (nonatomic, assign) CGFloat *fontSize; // Font size of controllers titles;
+@property (nonatomic, retain) UIColor *titleBackgroundColor; // Controllers titles background;
+@property (nonatomic, retain) UIColor *backgroundColor; // Use this color if controllers views is transparrent
+@property (nonatomic, retain) UIImage *titlesBackgroundImage; // 1 pixel width;
 
 - (id)initWithControllersStack:(NSArray *)controllers;
 
