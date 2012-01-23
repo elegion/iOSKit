@@ -62,29 +62,15 @@
     if (self) {
         _controllers = [controllers mutableCopy];
         
-        UIScreen *screen = [UIScreen mainScreen];
-        
-        UIApplication *app = [UIApplication sharedApplication];
-        
-        CGSize size = CGSizeMake(screen.bounds.size.width, screen.bounds.size.height - self.navigationController.navigationBar.frame.size.height - self.tabBarController.tabBar.frame.size.height - app.statusBarFrame.size.height);
-        
-        CGRect mainViewFrame = CGRectZero;
-        
-        mainViewFrame = YSRectSetSize(mainViewFrame, size);
-        
-        _controllersContainer = [[UIScrollView alloc] initWithFrame:mainViewFrame];
+        _controllersContainer = [[UIScrollView alloc] initWithFrame:CGRectZero];
         _controllersContainer.pagingEnabled = YES;
         _controllersContainer.delegate = self;
         _controllersContainer.showsVerticalScrollIndicator = NO;
         _controllersContainer.showsHorizontalScrollIndicator = NO;
-        _controllersContainer.contentSize = CGSizeMake(_controllersContainer.frame.size.width * [_controllers count] + 1, _controllersContainer.contentSize.height);
         
         _swipeBar = [[ELSwipeBar alloc] init];
         _swipeDelegate = _swipeBar;
         
-        _controllersContainer.frame  = YSRectSetHeight(_controllersContainer.frame, CGRectGetHeight(_controllersContainer.frame) - CGRectGetHeight(_swipeBar.frame));
-        _controllersContainer.frame = YSRectSetOriginY(_controllersContainer.frame, CGRectGetHeight(_swipeBar.frame));
-
     }
     return self;
 }
@@ -95,9 +81,25 @@
     [self.view addSubview:_swipeBar];
     [_swipeBar release];
     
+    UIScreen *screen = [UIScreen mainScreen];
+    
+    UIApplication *app = [UIApplication sharedApplication];
+    
+    CGSize size = CGSizeMake(screen.bounds.size.width, screen.bounds.size.height - self.navigationController.navigationBar.frame.size.height - self.navigationController.tabBarController.tabBar.frame.size.height - app.statusBarFrame.size.height - CGRectGetHeight(_swipeBar.frame));
+    
+    CGRect mainViewFrame = CGRectZero;
+    
+    mainViewFrame = YSRectSetSize(mainViewFrame, size);
+    
+    _controllersContainer.frame = mainViewFrame;
+    _controllersContainer.contentSize = CGSizeMake(_controllersContainer.frame.size.width * [_controllers count] + 1, _controllersContainer.contentSize.height);
+    
+    _controllersContainer.frame = YSRectSetOriginY(_controllersContainer.frame, CGRectGetHeight(_swipeBar.frame));
+    
+    
     for (int i = 0; i < [_controllers count]; i++) {
         UIViewController *viewController = [_controllers objectAtIndex:i];
-        viewController.view.frame = YSRectSetOriginX(viewController.view.frame, self.view.frame.size.width*i);
+        viewController.view.frame = YSRectSetOriginX(viewController.view.frame, CGRectGetWidth(self.view.frame)*i);
         viewController.view.frame = YSRectSetOriginY(viewController.view.frame, 0);
         viewController.view.frame = YSRectSetSize(viewController.view.frame, _controllersContainer.frame.size);
         [_controllersContainer addSubview:viewController.view];
@@ -185,7 +187,7 @@ static NSInteger const kTitlesPositionRange = 160;
 static CGFloat const kHorizontalMargin = 20.0;
 static CGFloat const kYarikMagicNumber = 101.8592;
 
-static CGFloat const kAdditionScaleFactor = 0.4;
+static CGFloat const kAdditionScaleFactor = 0.2;
 
 @implementation ELSwipeBar
 
@@ -229,6 +231,8 @@ CGAffineTransform scaleFunction(CGFloat x);
 
 CGFloat positionFunction(CGFloat x, CGFloat a, CGFloat verticalShift, CGFloat rangeShift,  Boolean debug);
 
+void addTriangle(CGMutablePathRef path, CGFloat base);
+
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -266,6 +270,32 @@ CGFloat positionFunction(CGFloat x, CGFloat a, CGFloat verticalShift, CGFloat ra
         CGContextFillRect(context, rect);
     }
     
+    CGContextSaveGState(context);
+    
+    CGContextSetFillColorWithColor(context, _textColor);
+    CGContextSetShadowWithColor(context, CGSizeMake(0, -1), 0.5, _shadowColor);
+    
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGFloat h = floorf(7 * 8/7 / 2);
+    CGPathMoveToPoint(path, NULL, 8, floorf(7 / 2) + 6);
+    CGPathAddLineToPoint(path, NULL, 8 + h, 6);
+    CGPathAddLineToPoint(path, NULL, 8 + h, 6 + 7);
+    CGPathCloseSubpath(path);
+    
+    CGContextAddPath(context, path);
+    CGContextDrawPath(context, kCGPathFill);
+    
+    CGContextTranslateCTM(context, CGRectGetWidth(rect), 0);
+    CGContextScaleCTM(context, -1, 1);
+    
+    CGContextAddPath(context, path);
+    CGContextDrawPath(context, kCGPathFill);
+    
+    CGContextRestoreGState(context);
+    
+    CGContextAddRect(context, CGRectMake(8 + h + 2, 0, CGRectGetWidth(rect) - 16 - 2 * h - 4, CGRectGetHeight(rect)));
+    CGContextClip(context);
+    
     CFStringRef helveticaNeue = CFSTR("HelveticaNeue-Bold");
     
     CTFontRef font = CTFontCreateWithName(helveticaNeue, _fontSize, NULL);
@@ -295,7 +325,7 @@ CGFloat positionFunction(CGFloat x, CGFloat a, CGFloat verticalShift, CGFloat ra
     double centerWidth = CTLineGetTypographicBounds(centerLine, NULL, NULL, NULL);
     double rightWidth = CTLineGetTypographicBounds(rightLine, NULL, NULL, NULL);
     
-    CGFloat verticalTextPorition = CGRectGetHeight(rect) / 2 - _fontSize / 2;
+    CGFloat verticalTextPorition = ceilf(CGRectGetHeight(rect) / 2 - _fontSize / 2 + 1);
 
     // We using function to determine x position of text
     // The function with respect to x (position function), 
@@ -396,6 +426,14 @@ CGAffineTransform scaleFunction(CGFloat x) {
         return CGAffineTransformIdentity;
     }
     return CGAffineTransformMakeScale(1.0 + kAdditionScaleFactor * (sinf((x - 82) / 50)),1.0 + kAdditionScaleFactor * (sinf((x - 82) / 50)));
+}
+
+void addTriangle(CGMutablePathRef path, CGFloat base) {
+    CGFloat h = floorf(base * 8/7 / 2);
+    CGPathMoveToPoint(path, NULL, 8, floorf(base / 2) + 6);
+    CGPathAddLineToPoint(path, NULL, 8 + h, 6);
+    CGPathAddLineToPoint(path, NULL, 8 + h, 6 + base);
+    CGPathCloseSubpath(path);
 }
 
 - (void)setTextColor:(CGColorRef)textColor {
