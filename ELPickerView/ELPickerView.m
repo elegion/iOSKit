@@ -10,11 +10,15 @@
 #import <QuartzCore/QuartzCore.h>
 #import "YSDrawingKit.h"
 
-static CGFloat const kDefaultDigitWidth = 33;
-static CGFloat const kDefaultDigitHeight = 37;
-static CGFloat  const KDefaultScrollInset = 30;
+static CGFloat const _kDefaultDigitWidth = 33;
+static CGFloat const _kDefaultDigitHeight = 37;
+static CGFloat  const _kDefaultScrollInset = 30;
 
-
+enum {
+    _kELCenterEdgesIndex,
+    _kELCenterGraphicIndex,
+    _kELMainGraphicIndex
+};
 
 @class ELPickerDigit;
 @interface ELPickerCenter : UIView <UIScrollViewDelegate> {
@@ -26,6 +30,7 @@ static CGFloat  const KDefaultScrollInset = 30;
 
 }
 
+- (void)setGraphic:(NSString *)imageName;
 - (void)setRange:(NSRange)range;
 - (void)setLeftValue:(NSInteger)value;
 - (void)setRigthValue:(NSInteger)value;
@@ -68,12 +73,14 @@ static CGFloat  const KDefaultScrollInset = 30;
 
 @implementation ELPickerView
 @synthesize delegate = _delegate;
+@synthesize graphicImagesNames = _graphicsNames;
 
 - (id)initWithRange:(NSRange)range andFrame:(CGRect)frame {
     self = [super initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, 97, 54)];
     if (self) {
         _range = range;
         _currentSelection = _range.location;
+        _graphicsNames = [[NSArray alloc] initWithObjects:@"center_edges.png", @"center_graphic.png", @"main_graphic.png", nil];
         [self initializeContent];
     }
     return self;
@@ -83,7 +90,7 @@ static CGFloat  const KDefaultScrollInset = 30;
     _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(2, 9, 93, 37)];
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.showsVerticalScrollIndicator = NO;
-    _scrollView.contentSize = CGSizeMake(kDefaultDigitWidth*_range.length + 2*KDefaultScrollInset, kDefaultDigitHeight);
+    _scrollView.contentSize = CGSizeMake(_kDefaultDigitWidth*_range.length + 2*_kDefaultScrollInset, _kDefaultDigitHeight);
     _scrollView.delegate = self;
     _scrollView.backgroundColor = [UIColor clearColor];
     [self addSubview:_scrollView];
@@ -91,7 +98,7 @@ static CGFloat  const KDefaultScrollInset = 30;
     
     for (int i = 0; i < _range.length; i++) {
         ELPickerDigit *digit = [[ELPickerDigit alloc] initWithDigit:_range.location + i];
-        digit.frame = CGRectMake(kDefaultDigitWidth* +i + KDefaultScrollInset, 0, kDefaultDigitWidth, kDefaultDigitHeight);
+        digit.frame = CGRectMake(_kDefaultDigitWidth* +i + _kDefaultScrollInset, 0, _kDefaultDigitWidth, _kDefaultDigitHeight);
         [_scrollView addSubview:digit];
         [digit setValue:_range.location + i];
         digit.tag = _range.location + i;
@@ -99,6 +106,7 @@ static CGFloat  const KDefaultScrollInset = 30;
     }
     
     ELPickerCenter *_center = [[ELPickerCenter alloc] init];
+    [_center setGraphic:[_graphicsNames objectAtIndex:_kELCenterGraphicIndex]];
     _forwardResponder = _center;
     [_center setLeftValue:_range.location + 1];
     [_center setRigthValue:_range.location];
@@ -116,7 +124,7 @@ static CGFloat  const KDefaultScrollInset = 30;
     
     // Main graphic of roll with shadows and vertical edges
     UIImageView *graphic = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
-    UIImage *image = [UIImage imageNamed:@"main_graphic.png"];
+    UIImage *image = [UIImage imageNamed:[_graphicsNames objectAtIndex:_kELMainGraphicIndex]];
     graphic.image = image;
     [self addSubview:graphic];
     [self sendSubviewToBack:graphic];
@@ -124,22 +132,23 @@ static CGFloat  const KDefaultScrollInset = 30;
  
     // Vertical edges of center panel and shadow near    
     UIImageView *edges = [[UIImageView alloc] initWithFrame:CGRectMake(_center.frame.origin.x - 4, 0, 41, 54)];
-    UIImage *edgesImage = [UIImage imageNamed:@"center_edges.png"];
+    UIImage *edgesImage = [UIImage imageNamed:[_graphicsNames objectAtIndex:_kELCenterEdgesIndex]];
     edges.image = edgesImage;
     [self addSubview:edges];
     [edges release];
 }
 
+
 - (void)setSelection:(NSInteger)shiftFromLocation {
-    [_scrollView setContentOffset:CGPointMake(((shiftFromLocation - 1) * kDefaultDigitWidth), _scrollView.contentOffset.y)];
+    [_scrollView setContentOffset:CGPointMake(((shiftFromLocation - 1) * _kDefaultDigitWidth), _scrollView.contentOffset.y)];
     [self notifyDelegate];
 }
 
 - (void)setRightPosition {
-    NSInteger position = ((NSInteger)_scrollView.contentOffset.x % (NSInteger)kDefaultDigitWidth);
+    NSInteger position = ((NSInteger)_scrollView.contentOffset.x % (NSInteger)_kDefaultDigitWidth);
     
-    if (position > kDefaultDigitWidth/2) {
-        [_scrollView setContentOffset:CGPointMake(_scrollView.contentOffset.x + (kDefaultDigitWidth - position), _scrollView.contentOffset.y) animated:YES];
+    if (position > _kDefaultDigitWidth/2) {
+        [_scrollView setContentOffset:CGPointMake(_scrollView.contentOffset.x + (_kDefaultDigitWidth - position), _scrollView.contentOffset.y) animated:YES];
     } else {
         [_scrollView setContentOffset:CGPointMake(_scrollView.contentOffset.x - position,_scrollView.contentOffset.y) animated:YES];
     }
@@ -173,13 +182,18 @@ static CGFloat  const KDefaultScrollInset = 30;
 }
 
 - (void)notifyDelegate {
-    _currentSelection = _scrollView.contentOffset.x / kDefaultDigitWidth + 1;
+    _currentSelection = _scrollView.contentOffset.x / _kDefaultDigitWidth + 1;
     if ([_delegate respondsToSelector:@selector(pickerView:didSelectValue:)]) {
         [_delegate pickerView:self didSelectValue:_currentSelection];
     }
     if ([_delegate respondsToSelector:@selector(pickerViewDidiEndScrollingAnimation)]) {
         [_delegate performSelector:@selector(pickerViewDidiEndScrollingAnimation)];
     }
+}
+
+- (void)dealloc {
+    [_graphicsNames release];
+    [super dealloc];
 }
 
 
@@ -189,13 +203,13 @@ static CGFloat  const KDefaultScrollInset = 30;
 @implementation ELPickerCenter
 
 - (id)init {
-    self = [super initWithFrame:CGRectMake(32, 0, kDefaultDigitWidth, 54)];
+    self = [super initWithFrame:CGRectMake(32, 0, _kDefaultDigitWidth, 54)];
     if (self) {
         
         _leftDigit = [[ELPickerDigit alloc] initWithDigit:2];
-        _leftDigit.frame = CGRectMake(-kDefaultDigitWidth, 9, kDefaultDigitWidth, kDefaultDigitHeight);
+        _leftDigit.frame = CGRectMake(-_kDefaultDigitWidth, 9, _kDefaultDigitWidth, _kDefaultDigitHeight);
         _rightDigit = [[ELPickerDigit alloc] initWithDigit:3];
-        _rightDigit.frame = CGRectMake(0, 9, kDefaultDigitWidth, kDefaultDigitHeight); 
+        _rightDigit.frame = CGRectMake(0, 9, _kDefaultDigitWidth, _kDefaultDigitHeight); 
         
         [_rightDigit setDigitColor:0xFFFFFF];
         [_rightDigit setShadowColor:0x0 offset:CGSizeMake(0, -1)];
@@ -232,24 +246,28 @@ static CGFloat  const KDefaultScrollInset = 30;
     [_rightDigit setValue:value];
 }
 
+- (void)setGraphic:(NSString *)imageName {
+    [(UIImageView *)[self.subviews objectAtIndex:0] setImage:[UIImage imageNamed:imageName]];
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSInteger currentPosition = ((NSInteger)scrollView.contentOffset.x % (NSInteger)kDefaultDigitWidth);
-    NSInteger rigthShift = (currentPosition < 0) ? -kDefaultDigitWidth : kDefaultDigitWidth;
+    NSInteger currentPosition = ((NSInteger)scrollView.contentOffset.x % (NSInteger)_kDefaultDigitWidth);
+    NSInteger rigthShift = (currentPosition < 0) ? -_kDefaultDigitWidth : _kDefaultDigitWidth;
     
     if (scrollView.contentOffset.x < 0) {
         _leftDigit.frame = YSRectSetOriginX(_leftDigit.frame, -scrollView.contentOffset.x + rigthShift);
     } else {
         _leftDigit.frame = YSRectSetOriginX(_leftDigit.frame, -currentPosition + rigthShift);
     }
-    if (scrollView.contentOffset.x >= 0 || (scrollView.contentOffset.x < 0 && _rightDigit.frame.origin.x < kDefaultDigitWidth)) {
+    if (scrollView.contentOffset.x >= 0 || (scrollView.contentOffset.x < 0 && _rightDigit.frame.origin.x < _kDefaultDigitWidth)) {
         _rightDigit.frame = YSRectSetOriginX(_rightDigit.frame, -currentPosition);
     }
     
     CGRect leftRect = [scrollView convertRect:_leftDigit.frame fromView:self];
     CGRect rightRect = [scrollView convertRect:_rightDigit.frame fromView:self];
     
-    [_leftDigit setValue:_range.location + ((leftRect.origin.x - 3) / kDefaultDigitWidth)];
-    [_rightDigit setValue:_range.location + ((rightRect.origin.x - 3)/ kDefaultDigitWidth)];
+    [_leftDigit setValue:_range.location + ((leftRect.origin.x - 3) / _kDefaultDigitWidth)];
+    [_rightDigit setValue:_range.location + ((rightRect.origin.x - 3)/ _kDefaultDigitWidth)];
     
     _leftDigit.hidden = ((_range.location + _range.length) < [_leftDigit currentValue] + 1) || ([_leftDigit currentValue] < _range.location);
     _rightDigit.hidden = ((_range.location + _range.length) < [_rightDigit currentValue] + 1) || ([_rightDigit currentValue] < _range.location);
