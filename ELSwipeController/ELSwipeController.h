@@ -10,7 +10,7 @@
 
 @class ELSwipeBar;
 @interface ELSwipeController : UIViewController {
-@private
+@protected
     UIScrollView    *_controllersContainer;
     NSMutableArray  *_controllers;
     ELSwipeBar      *_swipeBar;
@@ -26,3 +26,4 @@
 - (id)initWithControllersStack:(NSArray *)controllers;
 
 @end
+

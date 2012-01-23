@@ -38,6 +38,7 @@
 
 @end
 
+
 @interface ELSwipeController (Internal) <UIScrollViewDelegate>
 
 - (void)loadNeededControllersForIndex:(NSInteger)index;
@@ -464,3 +465,6 @@ void addTriangle(CGMutablePathRef path, CGFloat base) {
     [super dealloc];
 }
 @end
+
+
+
