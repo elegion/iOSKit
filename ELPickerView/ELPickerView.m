@@ -271,6 +271,10 @@ enum {
     
     _leftDigit.hidden = ((_range.location + _range.length) < [_leftDigit currentValue] + 1) || ([_leftDigit currentValue] < _range.location);
     _rightDigit.hidden = ((_range.location + _range.length) < [_rightDigit currentValue] + 1) || ([_rightDigit currentValue] < _range.location);
+    
+    if (scrollView.contentOffset.x < -2*_kDefaultDigitWidth) {
+        scrollView.contentOffset = CGPointMake(-2*_kDefaultDigitWidth, scrollView.contentOffset.y);
+    }
 }
 
 // Native background graphic drawing
