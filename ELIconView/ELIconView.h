@@ -1,6 +1,6 @@
 //
 //  ELIconView.h
-//  ArtFlora
+//  iOSKit
 //
 //  Created by Yarik Smirnov on 23.12.11.
 //  Copyright (c) 2011 e-Legion Ltd. All rights reserved.
