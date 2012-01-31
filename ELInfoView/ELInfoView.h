@@ -10,16 +10,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ELPanel.h"
 
-@interface ELInfoView : UIWindow {
-    UILabel *_title;
-    UILabel *_message;
+@protocol ELInfoViewDelegate <ELPanelDelegate>
+
+@end
+
+@interface ELInfoView : ELPanel {
+@protected
+    UILabel                 *_title;
+    UILabel                 *_message;
 }
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message;
 
-- (void)showWithInterval:(NSTimeInterval)showTime;
-
-- (void)show;
 
 @end

@@ -34,6 +34,7 @@ static CGFloat const kHideAlphaValue = 0.0;
 @end
 
 @implementation ELInfoView
+@synthesize delegate;
 
 - (id)initWithTitle:(NSString *)title message:(NSString *)message {
     if (!title && !message) {
@@ -78,88 +79,14 @@ static CGFloat const kHideAlphaValue = 0.0;
         }
         self.alpha = 0;
         self.userInteractionEnabled = YES;
-        self.windowLevel = UIWindowLevelAlert;
         [[NSNotificationCenter defaultCenter] addObserver:self 
-                                                 selector:@selector(dismiss) 
+                                                 selector:@selector(dismissFromScreen) 
                                                      name:UIKeyboardWillShowNotification 
                                                    object:nil];
     }
     return self;
 }
 
-- (void)show {
-    [self showWithInterval:kDefaultHideAnimationDelay];
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self dismiss];
-}
-
-
-
-- (void)dismiss {
-    self.hidden = YES;
-    [self dismissFromScreen];
-}
-
-- (void)showWithInterval:(NSTimeInterval)showTime {
-    [self setHidden:NO];
-    self.windowLevel = UIWindowLevelAlert;
-    [self animateAlphaToValue:kVisibleAlphaValue withDelay:showTime];
-}
-
-- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
-    if ([finished boolValue]) {
-        if (self.alpha != 0) {
-            [self animateAlphaToValue:kHideAlphaValue withDelay:*((NSTimeInterval *) context)];
-        } else {
-            [self dismissFromScreen];
-        }
-    }
-}
-
-- (void)animateAlphaToValue:(CGFloat)alpha withDelay:(NSTimeInterval)interval {
-    if ([UIView respondsToSelector:@selector(animateWithDuration:delay:options:animations:completion:)]) {
-        [UIView animateWithDuration:kDefaultTransitionInterval delay:(alpha != 0 ? 0.0 : interval) options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction animations:^{
-                self.alpha = alpha;
-            } completion:^(BOOL finished) {
-                [self animationDidStop:nil finished:[NSNumber numberWithBool:finished] context:(NSTimeInterval *)&interval];
-            }];
-    } else {
-        [UIView beginAnimations:@"transition" context:&interval];
-        [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-        [UIView setAnimationDuration:kDefaultTransitionInterval];
-        [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
-        
-        self.alpha = alpha;
-        
-        [UIView commitAnimations];
-    }
-}
-
-- (void)dismissFromScreen {
-    [[[[UIApplication sharedApplication] windows] objectAtIndex:0] makeKeyWindow];
-    [self removeFromSuperview];
-}
-
-
-- (void)drawRect:(CGRect)rect
-{
-    CGContextRef context = UIGraphicsGetCurrentContext();	
-
-    CGContextClearRect(context, rect);
-    
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGContextSetLineWidth(context, 5.0);
-    YSPathAddRoundedStrechedRect(path, 5.0, rect);
-    CGContextAddPath(context, path);
-    CGContextClip(context);
-    CGPathRelease(path);
-
-    CGContextSetFillColorWithColor(context, YSColorGetFromHexAndAlpha(0x0, 70));
-    CGContextFillRect(context, rect);
-    
-}
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self 
