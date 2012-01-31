@@ -25,5 +25,7 @@
 
 - (id)initWithControllersStack:(NSArray *)controllers;
 
+- (void)setControllers:(NSArray *)controllers;
+
 @end
 

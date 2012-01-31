@@ -41,7 +41,7 @@
 
 @interface ELSwipeController (Internal) <UIScrollViewDelegate>
 
-- (void)loadNeededControllersForIndex:(NSInteger)index;
+- (void)loadControllersViews;
 
 @end
 
@@ -59,10 +59,16 @@
         NSAssert(controllers, @"Controllers must not be nil.");
         return nil;
     }
-    self = [super init];
+    self = [self init];
     if (self) {
         _controllers = [controllers mutableCopy];
-        
+    }
+    return self;
+}
+
+- (id)init {
+    self = [super init]; 
+    if (self) {
         _controllersContainer = [[UIScrollView alloc] initWithFrame:CGRectZero];
         _controllersContainer.pagingEnabled = YES;
         _controllersContainer.delegate = self;
@@ -71,16 +77,21 @@
         
         _swipeBar = [[ELSwipeBar alloc] init];
         _swipeDelegate = _swipeBar;
-        
     }
     return self;
 }
 
+- (void)setControllers:(NSArray *)controllers {
+    [_controllers release];
+    _controllers = [controllers mutableCopy];
+    
+    if ([self isViewLoaded]) {
+        [self loadControllersViews];
+    }
+}
+
 - (void)loadView {
     [super loadView];
-    
-    [self.view addSubview:_swipeBar];
-    [_swipeBar release];
     
     UIScreen *screen = [UIScreen mainScreen];
     
@@ -93,23 +104,42 @@
     mainViewFrame = YSRectSetSize(mainViewFrame, size);
     
     _controllersContainer.frame = mainViewFrame;
-    _controllersContainer.contentSize = CGSizeMake(_controllersContainer.frame.size.width * [_controllers count] + 1, _controllersContainer.contentSize.height);
     
     _controllersContainer.frame = YSRectSetOriginY(_controllersContainer.frame, CGRectGetHeight(_swipeBar.frame));
     
-    
-    for (int i = 0; i < [_controllers count]; i++) {
-        UIViewController *viewController = [_controllers objectAtIndex:i];
-        viewController.view.frame = YSRectSetOriginX(viewController.view.frame, CGRectGetWidth(self.view.frame)*i);
-        viewController.view.frame = YSRectSetOriginY(viewController.view.frame, 0);
-        viewController.view.frame = YSRectSetSize(viewController.view.frame, _controllersContainer.frame.size);
-        [_controllersContainer addSubview:viewController.view];
-    }
+    [self loadControllersViews];
+            
+}
+
+
+- (void)loadControllersViews {
+    if ([_controllers count] > 0) {
         
-    [self.view addSubview:_controllersContainer];
-    [_controllersContainer release];
-    
-    [self scrollViewDidScroll:_controllersContainer];
+        if (_swipeBar.superview) {
+            [_swipeBar removeFromSuperview];
+        }
+        
+        [self.view addSubview:_swipeBar];
+        
+        _controllersContainer.contentSize = CGSizeZero;
+        _controllersContainer.contentSize = CGSizeMake(_controllersContainer.frame.size.width * [_controllers count] + 1, CGRectGetHeight(_controllersContainer.frame));
+        
+        for (int i = 0; i < [_controllers count]; i++) {
+            UIViewController *viewController = [_controllers objectAtIndex:i];
+            viewController.view.frame = YSRectSetOriginX(viewController.view.frame, CGRectGetWidth(self.view.frame)*i);
+            viewController.view.frame = YSRectSetOriginY(viewController.view.frame, 0);
+            viewController.view.frame = YSRectSetSize(viewController.view.frame, _controllersContainer.frame.size);
+            [_controllersContainer addSubview:viewController.view];
+        }
+        
+        [self scrollViewDidScroll:_controllersContainer];
+        
+        if (_controllersContainer.superview) {
+            [_controllersContainer removeFromSuperview];
+        }
+        
+        [self.view addSubview:_controllersContainer];
+    }
 }
 
 
@@ -178,6 +208,13 @@
 
 - (void)setShadowColor:(UIColor *)shadowColor {
     [_swipeBar setShadowColor:shadowColor.CGColor];
+}
+
+- (void)dealloc {
+    [_controllers release];
+    [_swipeBar release];
+    [_controllersContainer release];
+    [super dealloc];
 }
 
 
