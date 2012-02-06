@@ -91,7 +91,7 @@ static CGFloat const kHideAlphaValue = 0.0;
         if (self.alpha != 0) {
             [self animateAlphaToValue:kHideAlphaValue withDelay:*((NSTimeInterval *) context)];
         } else {
-            
+            [self dismissFromScreen];
         }
     }
 }
