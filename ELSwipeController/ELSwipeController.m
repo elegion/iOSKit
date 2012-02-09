@@ -329,6 +329,8 @@ void addTriangle(CGMutablePathRef path, CGFloat base);
     CGContextAddPath(context, path);
     CGContextDrawPath(context, kCGPathFill);
     
+    CGPathRelease(path);
+    
     CGContextRestoreGState(context);
     
     CGContextAddRect(context, CGRectMake(8 + h + 2, 0, CGRectGetWidth(rect) - 16 - 2 * h - 4, CGRectGetHeight(rect)));

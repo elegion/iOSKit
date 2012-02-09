@@ -45,8 +45,13 @@ static CGFloat const kHideAlphaValue = 0.0;
     if (self) {
         UIFont *helveticaNeueTitle = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18];
         UIFont *helveticaNeueMessage = [UIFont fontWithName:@"HelveticaNeue" size:16];
-        CGSize sizeOfTitle = [title sizeWithFont:helveticaNeueTitle constrainedToSize:CGSizeMake(kDefaultInfoViewWidth - 2*kDefaultTextMargin, 10000) lineBreakMode:UILineBreakModeTailTruncation];
-        CGSize sizeOfMessage = [message sizeWithFont:helveticaNeueMessage constrainedToSize:CGSizeMake(kDefaultInfoViewWidth - 2*kDefaultTextMargin, 10000) lineBreakMode:UILineBreakModeTailTruncation];
+        CGSize sizeOfTitle = CGSizeZero, sizeOfMessage = CGSizeZero;
+        if (title) {
+            sizeOfTitle = [title sizeWithFont:helveticaNeueTitle constrainedToSize:CGSizeMake(kDefaultInfoViewWidth - 2*kDefaultTextMargin, 10000) lineBreakMode:UILineBreakModeTailTruncation];
+        }
+        if (message) {
+            sizeOfMessage = [message sizeWithFont:helveticaNeueMessage constrainedToSize:CGSizeMake(kDefaultInfoViewWidth - 2*kDefaultTextMargin, 10000) lineBreakMode:UILineBreakModeTailTruncation];
+        }
         self.opaque = NO;
         self.bounds = CGRectMake(0, 0, kDefaultInfoViewWidth, sizeOfTitle.height + sizeOfMessage.height + ((title && message ? kDefaultlLabelsBreak : 0.0)) + 2*kDefaultTextMargin);
         CGRect screenBounds = [[UIScreen mainScreen] bounds];

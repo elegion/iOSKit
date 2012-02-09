@@ -51,6 +51,8 @@ static CGFloat const kHideAlphaValue = 0.0;
     YSPathAddRoundedStrechedRect(path, 5.0, CGRectInset(rect, 5, 5));
     CGContextAddPath(context, path);
     
+    CGPathRelease(path);
+    
     CGContextSetFillColorWithColor(context, _backgroundColor.CGColor);
     CGContextSaveGState(context);
     CGContextSetShadowWithColor(context, _shadowOffset, 3.0, _shadowColor.CGColor);
