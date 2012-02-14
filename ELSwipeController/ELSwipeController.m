@@ -132,7 +132,12 @@
             [_controllersContainer addSubview:viewController.view];
         }
         
-        [self scrollViewDidScroll:_controllersContainer];
+        if ([_controllers count] > 1) {
+            [self scrollViewDidScroll:_controllersContainer];
+        } else {
+            _controllersContainer.scrollEnabled = NO;
+            [_swipeBar scrollViewDidScroll:_controllersContainer withRight:nil center:[[_controllers lastObject] title] left:nil];
+        }
         
         if (_controllersContainer.superview) {
             [_controllersContainer removeFromSuperview];
@@ -150,47 +155,55 @@
     
     NSInteger index = currentController;
 
-    
+    NSString *left, *right;
     NSString *center = [[_controllers objectAtIndex:index] title];
-    NSString *left = index > 0 ? [[_controllers objectAtIndex:index - 1] title] : [[_controllers lastObject] title];
-    NSString *right = index <= [_controllers count] - 2 ? [[_controllers objectAtIndex:index + 1] title] : [[_controllers objectAtIndex:0] title];
-                      
-    [_swipeDelegate scrollViewDidScroll:scrollView withRight:right center:center left:left];
+    if ([_controllers count] > 2) {
+        left = index > 0 ? [[_controllers objectAtIndex:index - 1] title] : [[_controllers lastObject] title];
+        right = index <= [_controllers count] - 2 ? [[_controllers objectAtIndex:index + 1] title] : [[_controllers objectAtIndex:0] title];
+    } else {
+        left = (index == 1) ? [[_controllers objectAtIndex:0] title] : nil;
+        right = (index == 0) ? [[_controllers objectAtIndex:1] title] : nil;
+    }
+    if (scrollView.contentOffset.x >= 0 && scrollView.contentOffset.x <= (scrollView.contentSize.width - CGRectGetWidth(self.view.bounds))) {
+        [_swipeDelegate scrollViewDidScroll:scrollView withRight:right center:center left:left];
+    }
     
-    if (currentController == [_controllers count] - 1) {
-        UIViewController *firstController = [[_controllers objectAtIndex:0] retain];
-        
-        
-        for (UIViewController *viewController in _controllers) {
-            viewController.view.frame = YSRectSetOriginX(viewController.view.frame, viewController.view.frame.origin.x - scrollView.frame.size.width);
+    if ([_controllers count] >= 3) {
+        if (currentController == [_controllers count] - 1) {
+            UIViewController *firstController = [[_controllers objectAtIndex:0] retain];
+            
+            
+            for (UIViewController *viewController in _controllers) {
+                viewController.view.frame = YSRectSetOriginX(viewController.view.frame, viewController.view.frame.origin.x - scrollView.frame.size.width);
+            }
+            
+            firstController.view.frame = YSRectSetOriginX(firstController.view.frame, scrollView.frame.size.width * ([_controllers count] - 1));
+            
+            [_controllers removeObjectAtIndex:0];
+            [_controllers addObject:firstController];
+            
+            [firstController release];
+            
+            scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x - scrollView.frame.size.width, scrollView.contentOffset.y);
+            
+        } else if (currentController == 0) {
+            
+            UIViewController *lastController = [[_controllers lastObject] retain];
+            
+            
+            for (UIViewController *viewController in _controllers) {
+                viewController.view.frame = YSRectSetOriginX(viewController.view.frame, viewController.view.frame.origin.x + scrollView.frame.size.width);
+            }
+            
+            lastController.view.frame = YSRectSetOriginX(lastController.view.frame, 0);
+            
+            [_controllers removeLastObject];
+            [_controllers insertObject:lastController atIndex:0];
+            
+            [lastController release];
+            
+            scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x + scrollView.frame.size.width, scrollView.contentOffset.y);
         }
-        
-        firstController.view.frame = YSRectSetOriginX(firstController.view.frame, scrollView.frame.size.width * ([_controllers count] - 1));
-        
-        [_controllers removeObjectAtIndex:0];
-        [_controllers addObject:firstController];
-        
-        [firstController release];
-        
-        scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x - scrollView.frame.size.width, scrollView.contentOffset.y);
-        
-    } else if (currentController == 0) {
-        
-        UIViewController *lastController = [[_controllers lastObject] retain];
-        
-        
-        for (UIViewController *viewController in _controllers) {
-            viewController.view.frame = YSRectSetOriginX(viewController.view.frame, viewController.view.frame.origin.x + scrollView.frame.size.width);
-        }
-        
-        lastController.view.frame = YSRectSetOriginX(lastController.view.frame, 0);
-        
-        [_controllers removeLastObject];
-        [_controllers insertObject:lastController atIndex:0];
-        
-        [lastController release];
-
-        scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x + scrollView.frame.size.width, scrollView.contentOffset.y);
     }
 }
 
@@ -230,11 +243,11 @@ static CGFloat const kAdditionScaleFactor = 0.2;
 @implementation ELSwipeBar
 
 - (id)init {
-    self = [super initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 17)];
+    self = [super initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
     if (self) {
         self.opaque = YES;
     
-        _fontSize = 8.0;
+        _fontSize = 10.0;
         
         _backgroundColor = YSColorGetFromHex(0xFFFFFF);
         CGColorRetain(_backgroundColor);
@@ -254,12 +267,21 @@ static CGFloat const kAdditionScaleFactor = 0.2;
     
     [_rightTitle autorelease];
     _rightTitle = [rTitle copy];
+    if (!_rightTitle) {
+        _rightTitle = [NSString string];
+    }
 
     [_centerTitle autorelease];
     _centerTitle = [cTitle copy];
+    if (!_centerTitle) {
+        _centerTitle = [NSString string];
+    }
     
     [_leftTitle autorelease];
     _leftTitle = [lTitle copy];
+    if (!_leftTitle) {
+        _leftTitle = [NSString string];
+    }
     
     _globalScrollShift = (int)scrollView.contentOffset.x % (int)CGRectGetWidth(self.bounds);
     [self setNeedsDisplay];
@@ -320,14 +342,18 @@ void addTriangle(CGMutablePathRef path, CGFloat base);
     CGPathAddLineToPoint(path, NULL, 8 + h, 6 + 7);
     CGPathCloseSubpath(path);
     
-    CGContextAddPath(context, path);
-    CGContextDrawPath(context, kCGPathFill);
+    if ([_leftTitle length] > 0) {
+        CGContextAddPath(context, path);
+        CGContextDrawPath(context, kCGPathFill);
+    }
     
     CGContextTranslateCTM(context, CGRectGetWidth(rect), 0);
     CGContextScaleCTM(context, -1, 1);
     
-    CGContextAddPath(context, path);
-    CGContextDrawPath(context, kCGPathFill);
+    if ([_rightTitle length] > 0) {
+        CGContextAddPath(context, path);
+        CGContextDrawPath(context, kCGPathFill);
+    }
     
     CGPathRelease(path);
     
@@ -365,7 +391,7 @@ void addTriangle(CGMutablePathRef path, CGFloat base);
     double centerWidth = CTLineGetTypographicBounds(centerLine, NULL, NULL, NULL);
     double rightWidth = CTLineGetTypographicBounds(rightLine, NULL, NULL, NULL);
     
-    CGFloat verticalTextPorition = ceilf(CGRectGetHeight(rect) / 2 - _fontSize / 2 + 1);
+    CGFloat verticalTextPorition = ceilf(CGRectGetHeight(rect) / 2 - _fontSize / 2 + 2);
 
     // We using function to determine x position of text
     // The function with respect to x (position function), 
