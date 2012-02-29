@@ -105,8 +105,7 @@ enum {
         [digit release];
     }
     
-    ELPickerCenter *_center = [[ELPickerCenter alloc] init];
-    [_center setGraphic:[_graphicsNames objectAtIndex:_kELCenterGraphicIndex]];
+    _center = [[ELPickerCenter alloc] init];
     _forwardResponder = _center;
     [_center setLeftValue:_range.location + 1];
     [_center setRigthValue:_range.location];
@@ -123,21 +122,33 @@ enum {
 //    [shadow release];
     
     // Main graphic of roll with shadows and vertical edges
-    UIImageView *graphic = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    _graphic = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     UIImage *image = [UIImage imageNamed:[_graphicsNames objectAtIndex:_kELMainGraphicIndex]];
-    graphic.image = image;
-    [self addSubview:graphic];
-    [self sendSubviewToBack:graphic];
-    [graphic release];
+    _graphic.image = image;
+    [self addSubview:_graphic];
+    [self sendSubviewToBack:_graphic];
+    [_graphic release];
  
     // Vertical edges of center panel and shadow near    
-    UIImageView *edges = [[UIImageView alloc] initWithFrame:CGRectMake(_center.frame.origin.x - 4, 0, 41, 54)];
+    _edges = [[UIImageView alloc] initWithFrame:CGRectMake(_center.frame.origin.x - 4, 0, 41, 54)];
     UIImage *edgesImage = [UIImage imageNamed:[_graphicsNames objectAtIndex:_kELCenterEdgesIndex]];
-    edges.image = edgesImage;
-    [self addSubview:edges];
-    [edges release];
+    _edges.image = edgesImage;
+    [self addSubview:_edges];
+    [_edges release];
 }
 
+- (void)setGraphicImagesNames:(NSArray *)graphicImagesNames {
+    if ([graphicImagesNames count] > 0) {
+        _edges.image = [UIImage imageNamed:[graphicImagesNames objectAtIndex:_kELCenterEdgesIndex]];
+        if ([graphicImagesNames count] > 1) {
+            _graphic.image = [UIImage imageNamed:[graphicImagesNames objectAtIndex:_kELMainGraphicIndex]];
+            if ([graphicImagesNames count] > 2) {
+                [_center setGraphic:[graphicImagesNames objectAtIndex:_kELCenterGraphicIndex]];
+                [_center setNeedsDisplay];
+            }
+        }
+    }
+}
 
 - (void)setSelection:(NSInteger)shiftFromLocation {
     [_scrollView setContentOffset:CGPointMake(((shiftFromLocation - 1) * _kDefaultDigitWidth), _scrollView.contentOffset.y)];

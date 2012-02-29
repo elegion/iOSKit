@@ -6,7 +6,7 @@
 //  Copyright (c) 2011 e-Legion ltd. All rights reserved.
 //
 
-@class ELPickerView;
+@class ELPickerView, ELPickerCenter;
 @protocol ELPickerViewDelegate <NSObject>
 
 - (void)pickerView:(ELPickerView *)pickerView didSelectValue:(NSInteger)value;
@@ -18,6 +18,10 @@
 
 @interface ELPickerView : UIView {
 @private
+    ELPickerCenter              *_center;
+    UIImageView                 *_graphic;
+    UIImageView                 *_edges;
+    
     UIScrollView                *_scrollView;
     id<UIScrollViewDelegate>    _forwardResponder;
     NSRange                     _range;
