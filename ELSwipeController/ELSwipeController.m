@@ -304,8 +304,7 @@ void addTriangle(CGMutablePathRef path, CGFloat base);
     if (_backgroundImage) {
         
         size_t imageWidth = CGImageGetWidth(_backgroundImage);
-        size_t imageHeght = CGImageGetHeight(_backgroundImage);
-        CGSize imageSize = CGSizeMake(imageWidth, imageHeght);
+        CGSize imageSize = CGSizeMake(imageWidth, CGRectGetHeight(rect));
         CGRect imageRect = CGRectMake(0, 0, imageWidth, CGRectGetHeight(rect));
         
         CGLayerRef bgLayer = CGLayerCreateWithContext(context, imageSize, NULL);
@@ -314,7 +313,7 @@ void addTriangle(CGMutablePathRef path, CGFloat base);
         CGContextDrawImage(layerContext, imageRect, _backgroundImage);
         
         CGContextSaveGState(context);
-        for (int i = 0; i < rect.size.width / CGImageGetWidth(_backgroundImage); i++) {
+        for (int i = 0; i < rect.size.width / imageWidth; i++) {
         
             CGContextDrawLayerAtPoint(context, CGPointZero, bgLayer);
             CGContextTranslateCTM(context, imageWidth, 0.0);
