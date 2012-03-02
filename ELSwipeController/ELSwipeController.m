@@ -82,6 +82,11 @@
 }
 
 - (void)setControllers:(NSArray *)controllers {
+    for (UIViewController *controller in _controllers) {
+        if (controller.view.superview) {
+            [controller.view removeFromSuperview];
+        }
+    }
     [_controllers release];
     _controllers = [controllers mutableCopy];
     
