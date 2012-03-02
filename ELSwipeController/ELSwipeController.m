@@ -161,7 +161,7 @@
     NSInteger index = currentController;
 
     NSString *left, *right;
-    NSString *center = [[_controllers objectAtIndex:index] title];
+    NSString *center = index < [_controllers count] ? [[_controllers objectAtIndex:index] title] : nil;
     if ([_controllers count] > 2) {
         left = index > 0 ? [[_controllers objectAtIndex:index - 1] title] : [[_controllers lastObject] title];
         right = index <= [_controllers count] - 2 ? [[_controllers objectAtIndex:index + 1] title] : [[_controllers objectAtIndex:0] title];
