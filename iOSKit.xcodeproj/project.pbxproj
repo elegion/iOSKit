@@ -43,6 +43,9 @@
 		9D6A8F0D150168470089FA89 /* YSGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D6A8F07150168470089FA89 /* YSGeometry.m */; };
 		9D6A8F0F150168470089FA89 /* YSGraphics.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D6A8F09150168470089FA89 /* YSGraphics.m */; };
 		9D6A8F10150168470089FA89 /* YSGraphics.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D6A8F09150168470089FA89 /* YSGraphics.m */; };
+		9DA4B2511504DDDF00F078D8 /* YSDrawingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F05150168470089FA89 /* YSDrawingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9DA4B25C1504EF5700F078D8 /* YSGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F06150168470089FA89 /* YSGeometry.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9DA4B25D1504EF5A00F078D8 /* YSGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F08150168470089FA89 /* YSGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -299,6 +302,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D6A8EC5150158660089FA89 /* iOSKit.h in Headers */,
+				9DA4B2511504DDDF00F078D8 /* YSDrawingKit.h in Headers */,
+				9DA4B25C1504EF5700F078D8 /* YSGeometry.h in Headers */,
+				9DA4B25D1504EF5A00F078D8 /* YSGraphics.h in Headers */,
 				9D6A8EE315015F690089FA89 /* ELIconView.h in Headers */,
 				9D6A8EE615015F690089FA89 /* ELInfoView.h in Headers */,
 				9D6A8EE915015F690089FA89 /* ELPanel.h in Headers */,
@@ -507,7 +513,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
 				CODE_SIGN_IDENTITY = "iPhone Developer: Yaroslav Smirnov (WBEHP78VW2)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -532,7 +541,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
 				CODE_SIGN_IDENTITY = "iPhone Developer: Yaroslav Smirnov (WBEHP78VW2)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -550,6 +562,11 @@
 		9D6A8EBB1501541A0089FA89 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"ARCHS[sdk=*]" = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
 				CODE_SIGN_IDENTITY = "iPhone Developer: Yarik Smirnov (ZZLYV83UDJ)";
 				DSTROOT = /tmp/iOSKit.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -566,6 +583,11 @@
 		9D6A8EBC1501541A0089FA89 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"ARCHS[sdk=*]" = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
 				CODE_SIGN_IDENTITY = "iPhone Developer: Yarik Smirnov (ZZLYV83UDJ)";
 				DSTROOT = /tmp/iOSKit.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
