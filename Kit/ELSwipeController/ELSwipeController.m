@@ -43,6 +43,12 @@
 
 - (void)loadControllersViews;
 
+- (UIScrollView *)controllersContainer;
+
+- (ELSwipeBar *)swipeBar;
+
+- (NSArray *)controllers;
+
 @end
 
 @implementation ELSwipeController
@@ -93,6 +99,18 @@
     if ([self isViewLoaded]) {
         [self loadControllersViews];
     }
+}
+
+- (UIScrollView *)controllersContainer {
+    return _controllersContainer;
+}
+
+- (ELSwipeBar *)swipeBar {
+    return _swipeBar;
+}
+
+- (NSArray *)controllers {
+    return _controllers;
 }
 
 - (void)loadView {
