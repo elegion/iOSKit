@@ -22,6 +22,7 @@
 @property (nonatomic, retain) UIColor *titleBackgroundColor; // Controllers titles background;
 @property (nonatomic, retain) UIColor *backgroundColor; // Use this color if controllers views is transparrent
 @property (nonatomic, retain) UIImage *titlesBackgroundImage; // 1 pixel width;
+@property (nonatomic, assign) BOOL hideSwipeBar;
 
 - (id)initWithControllersStack:(NSArray *)controllers;
 

@@ -59,6 +59,7 @@
 @synthesize titleBackgroundColor = _titleBackgroundColor;
 @synthesize backgroundColor = _backgroundColor;
 @synthesize titlesBackgroundImage = _titlesBackgroundImage;
+@synthesize hideSwipeBar;
 
 - (id)initWithControllersStack:(NSArray *)controllers {
     if (!controllers) {
@@ -80,9 +81,11 @@
         _controllersContainer.delegate = self;
         _controllersContainer.showsVerticalScrollIndicator = NO;
         _controllersContainer.showsHorizontalScrollIndicator = NO;
+        _controllersContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight; 
         
         _swipeBar = [[ELSwipeBar alloc] init];
         _swipeDelegate = _swipeBar;
+        self.hideSwipeBar = false;
     }
     return self;
 }
@@ -131,7 +134,6 @@
     _controllersContainer.frame = YSRectSetOriginY(_controllersContainer.frame, CGRectGetHeight(_swipeBar.frame));
     
     [self loadControllersViews];
-            
 }
 
 
@@ -142,7 +144,9 @@
             [_swipeBar removeFromSuperview];
         }
         
-        [self.view addSubview:_swipeBar];
+        if (!self.hideSwipeBar) {
+            [self.view addSubview:_swipeBar];
+        }
         
         _controllersContainer.contentSize = CGSizeZero;
         _controllersContainer.contentSize = CGSizeMake(_controllersContainer.frame.size.width * [_controllers count] + 1, CGRectGetHeight(_controllersContainer.frame));
@@ -162,18 +166,15 @@
             [_swipeBar scrollViewDidScroll:_controllersContainer withRight:nil center:[[_controllers lastObject] title] left:nil];
         }
         
-        if (_controllersContainer.superview) {
-            [_controllersContainer removeFromSuperview];
+        if (!_controllersContainer.superview) {
+            [self.view addSubview:_controllersContainer];
         }
-        
-        [self.view addSubview:_controllersContainer];
     }
 }
 
 
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
     NSInteger currentController = floor((scrollView.contentOffset.x - scrollView.frame.size.width / 2) / scrollView.frame.size.width) + 1;
     
     NSInteger index = currentController;
