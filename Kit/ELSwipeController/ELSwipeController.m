@@ -49,6 +49,8 @@
 
 - (NSArray *)controllers;
 
+- (void)scrollTo:(CGFloat)offset;
+
 @end
 
 @implementation ELSwipeController
@@ -60,6 +62,8 @@
 @synthesize backgroundColor = _backgroundColor;
 @synthesize titlesBackgroundImage = _titlesBackgroundImage;
 @synthesize hideSwipeBar;
+
+CGFloat     _currentOffset;
 
 - (id)initWithControllersStack:(NSArray *)controllers {
     if (!controllers) {
@@ -86,6 +90,8 @@
         _swipeBar = [[ELSwipeBar alloc] init];
         _swipeDelegate = _swipeBar;
         self.hideSwipeBar = false;
+        
+        _currentOffset = 0;
     }
     return self;
 }
@@ -172,6 +178,22 @@
     }
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    _currentOffset = scrollView.contentOffset.x;
+}
+
+- (void)scrollTo:(CGFloat)offset {
+    _currentOffset = offset;
+    [_controllersContainer setContentOffset:CGPointMake(offset, _controllersContainer.contentOffset.y) animated:YES];
+}
+
+- (void)scrollLeft {
+    [self scrollTo:_currentOffset-_controllersContainer.frame.size.width];
+}
+
+- (void)scrollRight {
+    [self scrollTo:_currentOffset+_controllersContainer.frame.size.width];
+}
 
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -209,7 +231,7 @@
             [firstController release];
             
             scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x - scrollView.frame.size.width, scrollView.contentOffset.y);
-            
+            _currentOffset -= scrollView.frame.size.width;
         } else if (currentController == 0) {
             
             UIViewController *lastController = [[_controllers lastObject] retain];
@@ -227,6 +249,8 @@
             [lastController release];
             
             scrollView.contentOffset = CGPointMake(scrollView.contentOffset.x + scrollView.frame.size.width, scrollView.contentOffset.y);
+            _currentOffset += scrollView.frame.size.width;
+
         }
     }
 }

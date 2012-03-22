@@ -28,5 +28,8 @@
 
 - (void)setControllers:(NSArray *)controllers;
 
+- (void)scrollLeft;
+- (void)scrollRight;
+
 @end
 
