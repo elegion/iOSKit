@@ -10,9 +10,12 @@
 #import <QuartzCore/QuartzCore.h>
 #import "YSDrawingKit.h"
 
-static CGFloat const _kDefaultDigitWidth = 33;
-static CGFloat const _kDefaultDigitHeight = 37;
+static CGFloat const _kDefaultDigitWidth        = 33;
+static CGFloat const _kDefaultDigitHeight       = 37;
+static CGFloat const _kDefaultDigitWidthLarge   = 40;
+
 static CGFloat  const _kDefaultScrollInset = 30;
+static CGFloat  const _kDefaultScrollInsetLarge = 70;
 
 enum {
     _kELCenterEdgesIndex,
@@ -29,7 +32,7 @@ enum {
     NSRange _range;
 
 }
-
+@property (nonatomic, assign) BOOL useLargeAppearence;
 - (void)setGraphic:(NSString *)imageName;
 - (void)setRange:(NSRange)range;
 - (void)setLeftValue:(NSInteger)value;
@@ -45,14 +48,23 @@ enum {
 @property(nonatomic, assign) BOOL inverseGradient;
 @end
 
+typedef enum {
+    _ELDIGITSMALL,
+    _ELDIGITLARGE
+} _ELDIGITSTYLE;
 
 @interface ELPickerDigit : UIView {
 @private
     NSInteger _currentValue;
     NSString *_stringValue;
-    NSUInteger _digitColor;
-    NSUInteger _shadowColor;
     CGSize _shadowOffset;
+    
+    struct {
+        unsigned int digitStyle:16;
+        unsigned int digitColor:24;
+        unsigned int shadowColor:24;
+    } _digitFlags;
+    
 }
 
 - (id)initWithDigit:(NSInteger)digit;
@@ -74,10 +86,21 @@ enum {
 @implementation ELPickerView
 @synthesize delegate = _delegate;
 @synthesize graphicImagesNames = _graphicsNames;
+@synthesize pickerStyle = _pickerStyle;
 
 - (id)initWithRange:(NSRange)range andFrame:(CGRect)frame {
-    self = [super initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, 97, 54)];
+    self = [self initWithRange:range andFrame:frame andStyle:ELPickerViewStyleSmall];
+    return self;
+}
+
+- (id)initWithRange:(NSRange)range andFrame:(CGRect)frame andStyle:(ELPickerViewStyle)style {
+    CGSize size = CGSizeMake(97, 54);
+    if (style == ELPickerViewStyleLarge) {
+        size = CGSizeMake(245, 62);
+    }
+    self = [super initWithFrame:YSRectSetSize(frame, size)];
     if (self) {
+        _pickerStyle = style;
         _range = range;
         _currentSelection = _range.location;
         _graphicsNames = [[NSArray alloc] initWithObjects:@"center_edges.png", @"center_graphic.png", @"main_graphic.png", nil];
@@ -88,9 +111,15 @@ enum {
 
 - (void)initializeContent {
     _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(2, 9, 93, 37)];
+    if (_pickerStyle == ELPickerViewStyleLarge) {
+        _scrollView.frame = CGRectMake(31, 12, 184, 37);
+    }
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.showsVerticalScrollIndicator = NO;
     _scrollView.contentSize = CGSizeMake(_kDefaultDigitWidth*_range.length + 2*_kDefaultScrollInset, _kDefaultDigitHeight);
+    if (_pickerStyle == ELPickerViewStyleLarge) {
+        _scrollView.contentSize = CGSizeMake(_kDefaultDigitWidthLarge*_range.length + 2*_kDefaultScrollInsetLarge, _kDefaultDigitHeight);
+    }
     _scrollView.delegate = self;
     _scrollView.backgroundColor = [UIColor clearColor];
     [self addSubview:_scrollView];
@@ -98,7 +127,10 @@ enum {
     
     for (int i = 0; i < _range.length; i++) {
         ELPickerDigit *digit = [[ELPickerDigit alloc] initWithDigit:_range.location + i];
-        digit.frame = CGRectMake(_kDefaultDigitWidth* +i + _kDefaultScrollInset, 0, _kDefaultDigitWidth, _kDefaultDigitHeight);
+        digit.frame = CGRectMake(_kDefaultDigitWidth*i + _kDefaultScrollInset, 0, _kDefaultDigitWidth, _kDefaultDigitHeight);
+        if (_pickerStyle == ELPickerViewStyleLarge) {
+                digit.frame = CGRectMake(_kDefaultDigitWidthLarge*i + _kDefaultScrollInsetLarge, 0, _kDefaultDigitWidthLarge, _kDefaultDigitHeight);
+        }
         [_scrollView addSubview:digit];
         [digit setValue:_range.location + i];
         digit.tag = _range.location + i;
@@ -112,6 +144,10 @@ enum {
     [_center setRange:_range];
     [self addSubview:_center];
     [_center release];
+    
+    if (_pickerStyle == ELPickerViewStyleLarge) {
+        _center.useLargeAppearence = YES;
+    }
 
     //View shadow for center with native drawing
     
@@ -122,29 +158,31 @@ enum {
 //    [shadow release];
     
     // Main graphic of roll with shadows and vertical edges
-    _graphic = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    _graphic = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame))];
     UIImage *image = [UIImage imageNamed:[_graphicsNames objectAtIndex:_kELMainGraphicIndex]];
     _graphic.image = image;
     [self addSubview:_graphic];
     [self sendSubviewToBack:_graphic];
     [_graphic release];
  
-    // Vertical edges of center panel and shadow near    
-    _edges = [[UIImageView alloc] initWithFrame:CGRectMake(_center.frame.origin.x - 4, 0, 41, 54)];
-    UIImage *edgesImage = [UIImage imageNamed:[_graphicsNames objectAtIndex:_kELCenterEdgesIndex]];
-    _edges.image = edgesImage;
-    [self addSubview:_edges];
-    [_edges release];
+    // Vertical edges of center panel and shadow near
+    if (_pickerStyle == ELPickerViewStyleSmall) {
+        _edges = [[UIImageView alloc] initWithFrame:CGRectMake(_center.frame.origin.x - 4, 0, 41, 54)];
+        UIImage *edgesImage = [UIImage imageNamed:[_graphicsNames objectAtIndex:_kELCenterEdgesIndex]];
+        _edges.image = edgesImage;
+        [self addSubview:_edges];
+        [_edges release];
+    }
 }
 
 - (void)setGraphicImagesNames:(NSArray *)graphicImagesNames {
     if ([graphicImagesNames count] > 0) {
         _edges.image = [UIImage imageNamed:[graphicImagesNames objectAtIndex:_kELCenterEdgesIndex]];
         if ([graphicImagesNames count] > 1) {
-            _graphic.image = [UIImage imageNamed:[graphicImagesNames objectAtIndex:_kELMainGraphicIndex]];
+            [_center setGraphic:[graphicImagesNames objectAtIndex:_kELCenterGraphicIndex]];
+            [_center setNeedsDisplay];
             if ([graphicImagesNames count] > 2) {
-                [_center setGraphic:[graphicImagesNames objectAtIndex:_kELCenterGraphicIndex]];
-                [_center setNeedsDisplay];
+                _graphic.image = [UIImage imageNamed:[graphicImagesNames objectAtIndex:_kELMainGraphicIndex]];
             }
         }
     }
@@ -152,14 +190,18 @@ enum {
 
 - (void)setSelection:(NSInteger)shiftFromLocation {
     [_scrollView setContentOffset:CGPointMake(((shiftFromLocation - 1) * _kDefaultDigitWidth), _scrollView.contentOffset.y)];
+    if (_pickerStyle == ELPickerViewStyleLarge) {
+        [_scrollView setContentOffset:CGPointMake(((shiftFromLocation - 1) * _kDefaultDigitWidthLarge), _scrollView.contentOffset.y)];
+    }
     [self notifyDelegate];
 }
 
 - (void)setRightPosition {
-    NSInteger position = ((NSInteger)_scrollView.contentOffset.x % (NSInteger)_kDefaultDigitWidth);
+    CGFloat width = _pickerStyle == ELPickerViewStyleLarge ? _kDefaultDigitWidthLarge : _kDefaultDigitWidth;
+    NSInteger position = ((NSInteger)_scrollView.contentOffset.x % (NSInteger)width);
     
-    if (position > _kDefaultDigitWidth/2) {
-        [_scrollView setContentOffset:CGPointMake(_scrollView.contentOffset.x + (_kDefaultDigitWidth - position), _scrollView.contentOffset.y) animated:YES];
+    if (position > width/2) {
+        [_scrollView setContentOffset:CGPointMake(_scrollView.contentOffset.x + (width - position), _scrollView.contentOffset.y) animated:YES];
     } else {
         [_scrollView setContentOffset:CGPointMake(_scrollView.contentOffset.x - position,_scrollView.contentOffset.y) animated:YES];
     }
@@ -212,6 +254,7 @@ enum {
 
 
 @implementation ELPickerCenter
+@synthesize useLargeAppearence = _useLargeAppearence;
 
 - (id)init {
     self = [super initWithFrame:CGRectMake(32, 0, _kDefaultDigitWidth, 54)];
@@ -220,7 +263,7 @@ enum {
         _leftDigit = [[ELPickerDigit alloc] initWithDigit:2];
         _leftDigit.frame = CGRectMake(-_kDefaultDigitWidth, 9, _kDefaultDigitWidth, _kDefaultDigitHeight);
         _rightDigit = [[ELPickerDigit alloc] initWithDigit:3];
-        _rightDigit.frame = CGRectMake(0, 9, _kDefaultDigitWidth, _kDefaultDigitHeight); 
+        _rightDigit.frame = CGRectMake(0, 9, _kDefaultDigitWidth, _kDefaultDigitHeight);
         
         [_rightDigit setDigitColor:0xFFFFFF];
         [_rightDigit setShadowColor:0x0 offset:CGSizeMake(0, -1)];
@@ -245,6 +288,16 @@ enum {
     return self;
 }
 
+- (void)setUseLargeAppearence:(BOOL)useLargeAppearence {
+    _useLargeAppearence = useLargeAppearence;
+    if (_useLargeAppearence) {
+        _leftDigit.frame = CGRectMake(-_kDefaultDigitWidthLarge, 12, _kDefaultDigitWidthLarge, _kDefaultDigitHeight);
+        _rightDigit.frame = CGRectMake(0, 12, _kDefaultDigitWidthLarge, _kDefaultDigitHeight);
+        self.frame = CGRectMake(105, 0, 35, 62);
+        [(UIImageView *)[self.subviews objectAtIndex:0] setFrame:YSRectSetSize(CGRectZero, self.bounds.size)];
+    }
+}
+
 - (void)setRange:(NSRange)range {
     _range = range;
 }
@@ -262,29 +315,36 @@ enum {
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSInteger currentPosition = ((NSInteger)scrollView.contentOffset.x % (NSInteger)_kDefaultDigitWidth);
-    NSInteger rigthShift = (currentPosition < 0) ? -_kDefaultDigitWidth : _kDefaultDigitWidth;
+    CGFloat width = _useLargeAppearence ? _kDefaultDigitWidthLarge : _kDefaultDigitWidth;
+    
+    NSInteger currentPosition = ((NSInteger)scrollView.contentOffset.x % (NSInteger)width);
+    NSInteger rigthShift = (currentPosition < 0) ? -width : width;
     
     if (scrollView.contentOffset.x < 0) {
         _leftDigit.frame = YSRectSetOriginX(_leftDigit.frame, -scrollView.contentOffset.x + rigthShift);
     } else {
-        _leftDigit.frame = YSRectSetOriginX(_leftDigit.frame, -currentPosition + rigthShift);
+        _leftDigit.frame = YSRectSetOriginX(_leftDigit.frame, -currentPosition + rigthShift - 4);
     }
-    if (scrollView.contentOffset.x >= 0 || (scrollView.contentOffset.x < 0 && _rightDigit.frame.origin.x < _kDefaultDigitWidth)) {
-        _rightDigit.frame = YSRectSetOriginX(_rightDigit.frame, -currentPosition);
+    if (scrollView.contentOffset.x >= 0 || (scrollView.contentOffset.x < 0 && _rightDigit.frame.origin.x < width)) {
+        _rightDigit.frame = YSRectSetOriginX(_rightDigit.frame, -currentPosition - 4);
     }
     
     CGRect leftRect = [scrollView convertRect:_leftDigit.frame fromView:self];
     CGRect rightRect = [scrollView convertRect:_rightDigit.frame fromView:self];
     
-    [_leftDigit setValue:_range.location + ((leftRect.origin.x - 3) / _kDefaultDigitWidth)];
-    [_rightDigit setValue:_range.location + ((rightRect.origin.x - 3)/ _kDefaultDigitWidth)];
+    [_leftDigit setValue:_range.location + ((leftRect.origin.x) / width) - 1];
+    [_rightDigit setValue:_range.location + ((rightRect.origin.x)/ width) - 1];
     
-    _leftDigit.hidden = ((_range.location + _range.length) < [_leftDigit currentValue] + 1) || ([_leftDigit currentValue] < _range.location);
-    _rightDigit.hidden = ((_range.location + _range.length) < [_rightDigit currentValue] + 1) || ([_rightDigit currentValue] < _range.location);
-    
-    if (scrollView.contentOffset.x < -2*_kDefaultDigitWidth) {
-        scrollView.contentOffset = CGPointMake(-2*_kDefaultDigitWidth, scrollView.contentOffset.y);
+//    if (_useLargeAppearence) {
+//        _leftDigit.hidden = ((_range.location + _range.length) < [_leftDigit currentValue] + 1) || ([_leftDigit currentValue] < _range.location - 1);
+//        _rightDigit.hidden = ((_range.location + _range.length) < [_rightDigit currentValue] + 1) || ([_rightDigit currentValue] < _range.location - 1);
+//    } else {
+        _leftDigit.hidden = ((_range.location + _range.length) < [_leftDigit currentValue] + 1) || ([_leftDigit currentValue] < _range.location);
+        _rightDigit.hidden = ((_range.location + _range.length) < [_rightDigit currentValue] + 1) || ([_rightDigit currentValue] < _range.location);
+//    }
+    int digitCountEdge = _useLargeAppearence ? -4 : -2;
+    if (scrollView.contentOffset.x < digitCountEdge*width) {
+        scrollView.contentOffset = CGPointMake(digitCountEdge*width, scrollView.contentOffset.y);
     }
 }
 
@@ -312,8 +372,11 @@ enum {
     self = [super init];
     if (self) {
         [self setValue:digit];
-        _digitColor = 0x9a9a9a;
-        _shadowColor = 0xFFFFFF;
+        _digitFlags.digitColor = 0x9A9A9A;
+        if (_digitFlags.digitStyle == _ELDIGITLARGE) {
+            _digitFlags.digitColor = 0x808080;
+        }
+        _digitFlags.shadowColor = 0xFFFFFF;
         _shadowOffset = CGSizeMake(0, 1);
         self.opaque= NO;
     }
@@ -321,7 +384,7 @@ enum {
 }
 
 - (void)setDigitColor:(NSInteger)colorInHex {
-    _digitColor = colorInHex;
+    _digitFlags.digitColor = colorInHex;
 }
 
 - (NSInteger)currentValue {
@@ -336,7 +399,7 @@ enum {
 }
 
 - (void)setShadowColor:(NSUInteger)shadowColor offset:(CGSize)offset {
-    _shadowColor = shadowColor;
+    _digitFlags.shadowColor = shadowColor;
     _shadowOffset = offset;
 }
 
@@ -353,10 +416,10 @@ enum {
                          kCGEncodingMacRoman);
 
     CGFloat opacity = 100;
-    if (_shadowColor == 0x0) {
+    if (_digitFlags.shadowColor == 0x0) {
         opacity = 37;
     }
-    CGContextSetFillColorWithColor(myContext, YSColorGetFromHex(_digitColor));
+    CGContextSetFillColorWithColor(myContext, YSColorGetFromHex(_digitFlags.digitColor));
     
     // Setting center text aligment
     CGContextSetTextPosition(myContext, 0, 0);
@@ -366,7 +429,7 @@ enum {
     CGFloat xPosition = (self.bounds.size.width - endTextPosition.x) / 2;
     
     CGContextSaveGState(myContext);
-    CGContextSetShadowWithColor(myContext, _shadowOffset, 0, YSColorGetFromHexAndAlpha(_shadowColor, opacity));
+    CGContextSetShadowWithColor(myContext, _shadowOffset, 0, YSColorGetFromHexAndAlpha(_digitFlags.shadowColor, opacity));
     CGContextSetTextDrawingMode (myContext, kCGTextFill);
     CGContextShowTextAtPoint (myContext, floorf(xPosition) , 10, [_stringValue cStringUsingEncoding:NSUTF8StringEncoding], [_stringValue length]);
     CGContextRestoreGState(myContext);

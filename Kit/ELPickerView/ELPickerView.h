@@ -16,6 +16,11 @@
 
 @end
 
+typedef enum {
+    ELPickerViewStyleSmall,
+    ELPickerViewStyleLarge
+} ELPickerViewStyle;
+
 @interface ELPickerView : UIView {
 @private
     ELPickerCenter              *_center;
@@ -31,8 +36,11 @@
 }
 @property(nonatomic, assign) id<ELPickerViewDelegate> delegate;
 @property(nonatomic, retain) NSArray *graphicImagesNames; // Array of 3 strings with names of images for: center panel, center panel edges, shadows of roll.
+@property(nonatomic, assign) ELPickerViewStyle pickerStyle;
 
 - (id)initWithRange:(NSRange)range andFrame:(CGRect)frame;
+
+- (id)initWithRange:(NSRange)range andFrame:(CGRect)frame andStyle:(ELPickerViewStyle)style;
 
 - (void)setRightPosition;
 
