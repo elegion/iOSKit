@@ -15,7 +15,7 @@ static CGFloat const _kDefaultDigitHeight       = 37;
 static CGFloat const _kDefaultDigitWidthLarge   = 40;
 
 static CGFloat  const _kDefaultScrollInset = 30;
-static CGFloat  const _kDefaultScrollInsetLarge = 70;
+static CGFloat  const _kDefaultScrollInsetLarge = 73;
 
 enum {
     _kELCenterEdgesIndex,
@@ -320,28 +320,25 @@ typedef enum {
     NSInteger currentPosition = ((NSInteger)scrollView.contentOffset.x % (NSInteger)width);
     NSInteger rigthShift = (currentPosition < 0) ? -width : width;
     
+    CGFloat addonShift = _useLargeAppearence ? -1 : 0;
     if (scrollView.contentOffset.x < 0) {
         _leftDigit.frame = YSRectSetOriginX(_leftDigit.frame, -scrollView.contentOffset.x + rigthShift);
     } else {
-        _leftDigit.frame = YSRectSetOriginX(_leftDigit.frame, -currentPosition + rigthShift - 4);
+        _leftDigit.frame = YSRectSetOriginX(_leftDigit.frame, -currentPosition + rigthShift + addonShift);
     }
     if (scrollView.contentOffset.x >= 0 || (scrollView.contentOffset.x < 0 && _rightDigit.frame.origin.x < width)) {
-        _rightDigit.frame = YSRectSetOriginX(_rightDigit.frame, -currentPosition - 4);
+        _rightDigit.frame = YSRectSetOriginX(_rightDigit.frame, -currentPosition + addonShift);
     }
     
     CGRect leftRect = [scrollView convertRect:_leftDigit.frame fromView:self];
     CGRect rightRect = [scrollView convertRect:_rightDigit.frame fromView:self];
     
-    [_leftDigit setValue:_range.location + ((leftRect.origin.x) / width) - 1];
-    [_rightDigit setValue:_range.location + ((rightRect.origin.x)/ width) - 1];
+    [_leftDigit setValue:_range.location + ((leftRect.origin.x) / width) - (int)_useLargeAppearence];
+    [_rightDigit setValue:_range.location + ((rightRect.origin.x)/ width) - (int)_useLargeAppearence];
     
-//    if (_useLargeAppearence) {
-//        _leftDigit.hidden = ((_range.location + _range.length) < [_leftDigit currentValue] + 1) || ([_leftDigit currentValue] < _range.location - 1);
-//        _rightDigit.hidden = ((_range.location + _range.length) < [_rightDigit currentValue] + 1) || ([_rightDigit currentValue] < _range.location - 1);
-//    } else {
-        _leftDigit.hidden = ((_range.location + _range.length) < [_leftDigit currentValue] + 1) || ([_leftDigit currentValue] < _range.location);
-        _rightDigit.hidden = ((_range.location + _range.length) < [_rightDigit currentValue] + 1) || ([_rightDigit currentValue] < _range.location);
-//    }
+    _leftDigit.hidden = ((_range.location + _range.length) < [_leftDigit currentValue] + 1) || ([_leftDigit currentValue] < _range.location);
+    _rightDigit.hidden = ((_range.location + _range.length) < [_rightDigit currentValue] + 1) || ([_rightDigit currentValue] < _range.location);
+
     int digitCountEdge = _useLargeAppearence ? -4 : -2;
     if (scrollView.contentOffset.x < digitCountEdge*width) {
         scrollView.contentOffset = CGPointMake(digitCountEdge*width, scrollView.contentOffset.y);
