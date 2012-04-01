@@ -387,11 +387,12 @@ void addTriangle(CGMutablePathRef path, CGFloat base);
     CGContextSetFillColorWithColor(context, _textColor);
     CGContextSetShadowWithColor(context, CGSizeMake(0, -1), 0.5, _shadowColor);
     
+    //drawing triangles
     CGMutablePathRef path = CGPathCreateMutable();
-    CGFloat h = floorf(7 * 8/7 / 2);
-    CGPathMoveToPoint(path, NULL, 8, floorf(7 / 2) + 6);
-    CGPathAddLineToPoint(path, NULL, 8 + h, 6);
-    CGPathAddLineToPoint(path, NULL, 8 + h, 6 + 7);
+    CGFloat h = 4;
+    CGPathMoveToPoint(path, NULL, 8, floorf(7 / 2) + 8);
+    CGPathAddLineToPoint(path, NULL, 8 + h, 7);
+    CGPathAddLineToPoint(path, NULL, 8 + h, 8 + 7);
     CGPathCloseSubpath(path);
     
     if ([_leftTitle length] > 0) {
