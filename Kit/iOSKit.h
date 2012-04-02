@@ -14,6 +14,7 @@
 #import "ELInfoView.h"
 #import "ELPickerView.h"
 #import "ELSwipeController.h"
+#import "ELUtils.h"
 
 #endif
 
