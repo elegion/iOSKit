@@ -11,7 +11,7 @@
 
 UIFont * ELFontGetFromFamilyName(ELFontFamilyName familyName, ELFontStyle style, CGFloat pointSize) {
     CTFontRef ctFont = YSFontCreateFromWithNameAndStyle(familyName, style, pointSize);
-    CFStringRef name = CTFontCopyFullName(ctFont);
+    CFStringRef name = CTFontCopyPostScriptName(ctFont);
     
     UIFont * font = [UIFont fontWithName:(NSString *)name size:pointSize];
     
