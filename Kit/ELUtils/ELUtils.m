@@ -14,6 +14,23 @@ UIFont * ELFontGetFromFamilyName(ELFontFamilyName familyName, ELFontStyle style,
     CFStringRef name = CTFontCopyPostScriptName(ctFont);
     
     UIFont * font = [UIFont fontWithName:(NSString *)name size:pointSize];
+    if (!font) {
+        ELFontStyle replaceStyle;
+        switch (style) {
+            case ELFontStyleMedium:
+                replaceStyle = ELFontStyleRegular;
+                break;
+            case ELFontStyleLight:
+                replaceStyle = ELFontStyleRegular;
+                break;
+            case ELFontStyleCondensedBold:
+                replaceStyle = ELFontStyleBold;
+                break;
+            default:
+                break;
+        }
+        font = ELFontGetFromFamilyName(familyName, replaceStyle, pointSize);
+    }
     
     CFRelease(ctFont);
     CFRelease(name);
