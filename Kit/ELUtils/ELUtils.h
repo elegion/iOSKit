@@ -57,7 +57,9 @@ UIColor * ELColorGetWithHexAndAlpha(NSUInteger hexColor, CGFloat alphaInPercents
 
 @interface UIColor (HexademicalColors)
 
-+ (UIColor *)colorFromHex:(NSUInteger)hex alpha:(CGFloat)alpha;
++ (UIColor *)colorFromHex:(NSUInteger)hex alpha:(CGFloat)alphaInPercentage;
+
++ (UIColor *)colorFromHex:(NSUInteger)hexademical
 
 @end
 
