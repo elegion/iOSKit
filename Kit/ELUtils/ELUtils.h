@@ -55,6 +55,8 @@ UIColor * ELColorGetWithHex(NSUInteger hexColor);
 
 UIColor * ELColorGetWithHexAndAlpha(NSUInteger hexColor, CGFloat alphaInPercents);
 
+NSString * ELStringGetByFilteringPhone(NSString *phone);
+
 @interface UIColor (HexademicalColors)
 
 + (UIColor *)colorFromHex:(NSUInteger)hex alpha:(CGFloat)alphaInPercentage;

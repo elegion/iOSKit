@@ -57,6 +57,10 @@ UIColor * ELColorGetWithHexAndAlpha(NSUInteger hexColor, CGFloat alphaInPercents
     return color;
 }
 
+NSString * ELStringGetByFilteringPhone(NSString *phone) {
+    return [[phone componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"+0123456789-()"] invertedSet]] componentsJoinedByString:@""];
+}
+
 
 @implementation UIColor (HexademicalColors)
 
