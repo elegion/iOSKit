@@ -236,6 +236,9 @@ typedef enum {
 
 - (void)notifyDelegate {
     _currentSelection = _scrollView.contentOffset.x / _kDefaultDigitWidth + 1;
+    if (_pickerStyle == ELPickerViewStyleLarge) {
+        _currentSelection = _scrollView.contentOffset.x / _kDefaultDigitWidthLarge + 1;
+    }
     if ([_delegate respondsToSelector:@selector(pickerView:didSelectValue:)]) {
         [_delegate pickerView:self didSelectValue:_currentSelection];
     }
@@ -245,6 +248,7 @@ typedef enum {
 }
 
 - (void)dealloc {
+    _scrollView.delegate = nil;
     [_graphicsNames release];
     [super dealloc];
 }
@@ -416,7 +420,11 @@ typedef enum {
     if (_digitFlags.shadowColor == 0x0) {
         opacity = 37;
     }
-    CGContextSetFillColorWithColor(myContext, YSColorGetFromHex(_digitFlags.digitColor));
+    
+    CGColorRef digitColor = YSColorCreateWithRGB(_digitFlags.digitColor);
+    CGColorRef digitShadow = YSColorCreateWithRGBAndAlpha(_digitFlags.shadowColor, opacity);
+    
+    CGContextSetFillColorWithColor(myContext, digitColor);
     
     // Setting center text aligment
     CGContextSetTextPosition(myContext, 0, 0);
@@ -426,10 +434,13 @@ typedef enum {
     CGFloat xPosition = (self.bounds.size.width - endTextPosition.x) / 2;
     
     CGContextSaveGState(myContext);
-    CGContextSetShadowWithColor(myContext, _shadowOffset, 0, YSColorGetFromHexAndAlpha(_digitFlags.shadowColor, opacity));
+    CGContextSetShadowWithColor(myContext, _shadowOffset, 0, digitShadow);
     CGContextSetTextDrawingMode (myContext, kCGTextFill);
     CGContextShowTextAtPoint (myContext, floorf(xPosition) , 10, [_stringValue cStringUsingEncoding:NSUTF8StringEncoding], [_stringValue length]);
     CGContextRestoreGState(myContext);
+    
+    CGColorRelease(digitColor);
+    CGColorRelease(digitShadow);
 }
 
 - (void)dealloc {
