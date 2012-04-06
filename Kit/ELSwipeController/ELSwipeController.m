@@ -21,7 +21,7 @@
     CGColorRef  _shadowColor;
     CGColorRef  _backgroundColor;
     
-    CGImageRef  _backgroundImage;
+    UIImage     *_backgroundImage;
     
     CGFloat     _fontSize;
 }
@@ -34,7 +34,7 @@
 
 - (void)setBackgroundColor:(CGColorRef)backgroundColor;
 
-- (void)setBackgroundImage:(CGImageRef)image;
+- (void)setBackgroundImage:(UIImage *)image;
 
 @end
 
@@ -261,7 +261,7 @@ CGFloat     _currentOffset;
 }
 
 - (void)setTitlesBackgroundImage:(UIImage *)titlesBackgroundImage {
-    [_swipeBar setBackgroundImage:titlesBackgroundImage.CGImage];
+    [_swipeBar setBackgroundImage:titlesBackgroundImage];
 }
 
 - (void)setTitleColor:(UIColor *)titleColor {
@@ -356,25 +356,7 @@ void addTriangle(CGMutablePathRef path, CGFloat base);
 
     if (_backgroundImage) {
         
-        size_t imageWidth = CGImageGetWidth(_backgroundImage);
-        CGSize imageSize = CGSizeMake(imageWidth, CGRectGetHeight(rect));
-        CGRect imageRect = CGRectMake(0, 0, imageWidth, CGRectGetHeight(rect));
-        
-        CGLayerRef bgLayer = CGLayerCreateWithContext(context, imageSize, NULL);
-        CGContextRef layerContext = CGLayerGetContext(bgLayer);
-        
-        CGContextDrawImage(layerContext, imageRect, _backgroundImage);
-        
-        CGContextSaveGState(context);
-        for (int i = 0; i < rect.size.width / imageWidth; i++) {
-        
-            CGContextDrawLayerAtPoint(context, CGPointZero, bgLayer);
-            CGContextTranslateCTM(context, imageWidth, 0.0);
-            
-        }
-        CGContextRestoreGState(context);
-        
-        CGLayerRelease(bgLayer);
+        [_backgroundImage drawAsPatternInRect:rect];
         
     } else {
         
@@ -571,9 +553,9 @@ void addTriangle(CGMutablePathRef path, CGFloat base) {
     _backgroundColor = CGColorRetain(backgroundColor);
 }
 
-- (void)setBackgroundImage:(CGImageRef)image {
-    CGImageRelease(_backgroundImage);
-    _backgroundImage = CGImageRetain(image);
+- (void)setBackgroundImage:(UIImage *)image {
+    [_backgroundImage release];
+    _backgroundImage = [image retain];
 }
 
 - (void)dealloc {
