@@ -27,6 +27,7 @@
 - (id)initWithControllersStack:(NSArray *)controllers;
 
 - (void)setControllers:(NSArray *)controllers;
+- (void)scrollToController:(NSInteger)index;
 
 - (void)scrollLeft;
 - (void)scrollRight;

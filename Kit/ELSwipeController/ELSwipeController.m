@@ -188,6 +188,11 @@ CGFloat     _currentOffset;
     }
 }
 
+- (void)scrollToController:(NSInteger)index {
+    UIViewController *ctrl = [_controllers objectAtIndex:index];
+    [self scrollTo:CGRectGetMinX(ctrl.view.frame)];
+}
+
 - (void)scrollTo:(CGFloat)offset {
     _currentOffset = offset;
     [_controllersContainer setContentOffset:CGPointMake(offset, _controllersContainer.contentOffset.y) animated:YES];
