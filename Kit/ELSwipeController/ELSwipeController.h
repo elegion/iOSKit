@@ -30,7 +30,7 @@
 
 - (void)scrollLeft;
 - (void)scrollRight;
-- (void)scrolledToSection:(UIViewController*)section;
+- (void)scrolledToSection:(NSUInteger)sectionIndex;
 
 @end
 

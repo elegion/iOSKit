@@ -180,6 +180,12 @@ CGFloat     _currentOffset;
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     _currentOffset = scrollView.contentOffset.x;
+    
+    NSUInteger index = floor((scrollView.contentOffset.x - scrollView.frame.size.width / 2) / scrollView.frame.size.width) + 1;
+    
+    if (scrollView.contentOffset.x >= 0 && scrollView.contentOffset.x <= (scrollView.contentSize.width - CGRectGetWidth(self.view.bounds))) {
+        [self scrolledToSection:index];
+    }
 }
 
 - (void)scrollTo:(CGFloat)offset {
@@ -195,7 +201,7 @@ CGFloat     _currentOffset;
     [self scrollTo:_currentOffset+_controllersContainer.frame.size.width];
 }
 
-- (void)scrolledToSection:(UIViewController*)section {
+- (void)scrolledToSection:(NSUInteger)sectionIndex {
 //    NSLog(@"scrolledToSection: %@",section.title);
 }
 
@@ -216,7 +222,6 @@ CGFloat     _currentOffset;
     }
     if (scrollView.contentOffset.x >= 0 && scrollView.contentOffset.x <= (scrollView.contentSize.width - CGRectGetWidth(self.view.bounds))) {
         [_swipeDelegate scrollViewDidScroll:scrollView withRight:right center:center left:left];
-        [self scrolledToSection:centerController];
     }
     
     if ([_controllers count] >= 3) {
