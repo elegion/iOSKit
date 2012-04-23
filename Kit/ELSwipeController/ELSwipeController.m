@@ -178,14 +178,26 @@ CGFloat     _currentOffset;
     }
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    _currentOffset = scrollView.contentOffset.x;
+- (void)scrollFinished {
+    _currentOffset = _controllersContainer.contentOffset.x;
     
-    NSUInteger index = floor((scrollView.contentOffset.x - scrollView.frame.size.width / 2) / scrollView.frame.size.width) + 1;
+    NSUInteger index = floor((_controllersContainer.contentOffset.x - _controllersContainer.frame.size.width / 2) / _controllersContainer.frame.size.width) + 1;
     
-    if (scrollView.contentOffset.x >= 0 && scrollView.contentOffset.x <= (scrollView.contentSize.width - CGRectGetWidth(self.view.bounds))) {
+    if (_controllersContainer.contentOffset.x >= 0 && _controllersContainer.contentOffset.x <= (_controllersContainer.contentSize.width - CGRectGetWidth(self.view.bounds))) {
         [self scrolledToSection:index];
     }
+
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    NSLog(@"scrollViewDidEndDecelerating");
+    [self scrollFinished];
+    
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    NSLog(@"scrollViewDidEndScrollingAnimation");
+    [self scrollFinished];
 }
 
 - (void)scrollToController:(NSInteger)index {
@@ -211,6 +223,7 @@ CGFloat     _currentOffset;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSLog(@"scrollViewDidScroll");
     NSInteger currentController = floor((scrollView.contentOffset.x - scrollView.frame.size.width / 2) / scrollView.frame.size.width) + 1;
     
     NSInteger index = currentController;
