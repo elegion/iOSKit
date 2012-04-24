@@ -173,7 +173,7 @@ CGFloat     _currentOffset;
         }
         
         if (!_controllersContainer.superview) {
-            [self.view addSubview:_controllersContainer];
+            [self.view insertSubview:_controllersContainer atIndex:0];
         }
     }
 }
@@ -190,13 +190,11 @@ CGFloat     _currentOffset;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    NSLog(@"scrollViewDidEndDecelerating");
     [self scrollFinished];
     
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    NSLog(@"scrollViewDidEndScrollingAnimation");
     [self scrollFinished];
 }
 
@@ -223,7 +221,6 @@ CGFloat     _currentOffset;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    NSLog(@"scrollViewDidScroll");
     NSInteger currentController = floor((scrollView.contentOffset.x - scrollView.frame.size.width / 2) / scrollView.frame.size.width) + 1;
     
     NSInteger index = currentController;
