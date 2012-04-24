@@ -217,7 +217,6 @@ CGFloat     _currentOffset;
 }
 
 - (void)scrolledToSection:(NSUInteger)sectionIndex {
-//    NSLog(@"scrolledToSection: %@",section.title);
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
