@@ -349,6 +349,12 @@ typedef enum {
     }
 }
 
+- (void)dealloc {
+    [super dealloc];
+    [_leftDigit release];
+    [_rightDigit release];
+}
+
 // Native background graphic drawing
 
 //- (void)drawRect:(CGRect)rect {
