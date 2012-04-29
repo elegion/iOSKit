@@ -204,8 +204,10 @@ CGFloat     _currentOffset;
 }
 
 - (void)scrollTo:(CGFloat)offset {
-    _currentOffset = offset;
-    [_controllersContainer setContentOffset:CGPointMake(offset, _controllersContainer.contentOffset.y) animated:YES];
+    if (offset >= 0 && offset <= _controllersContainer.contentSize.width - _controllersContainer.frame.size.width) {
+        _currentOffset = offset;
+        [_controllersContainer setContentOffset:CGPointMake(offset, _controllersContainer.contentOffset.y) animated:YES];
+    }
 }
 
 - (void)scrollLeft {
