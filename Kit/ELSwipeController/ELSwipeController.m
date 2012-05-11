@@ -323,12 +323,9 @@ static CGFloat const kAdditionScaleFactor = 0.2;
     
         _fontSize = 10.0;
         
-        _backgroundColor = YSColorGetFromHex(0xFFFFFF);
-        CGColorRetain(_backgroundColor);
-        _textColor = YSColorGetFromHex(0x0);
-        CGColorRetain(_textColor);
-        _shadowColor = YSColorGetFromHex(0x777777);
-        CGColorRetain(_shadowColor);
+        _backgroundColor = YSColorCreateWhite();
+        _textColor = YSColorCreateBlack();
+        _shadowColor = YSColorCreateWithRGB(0x777777);
     }
     return self;
 }

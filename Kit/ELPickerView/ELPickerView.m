@@ -476,8 +476,13 @@ typedef enum {
     CGContextClearRect(context, rect);
     
     CGFloat location[2] = {0.0, 1.0};
-    CGColorRef colorValues[2] = {YSColorGetFromHexAndAlpha(0xCCCCCC, 30), YSColorGetFromHexAndAlpha(0xCCCCCC, 0)};
+    CGColorRef fromColor = YSColorCreateWithRGBAndAlpha(0xCCCCCC, 30);
+    CGColorRef toColor = YSColorCreateWithRGBAndAlpha(0xCCCCCC, 0);
+    
+    CGColorRef colorValues[2] = {fromColor, toColor};
     CFArrayRef colors = CFArrayCreate(kCFAllocatorDefault, (void *)colorValues, 2, NULL);
+    CGColorRelease(fromColor);
+    CGColorRelease(toColor);
     
     CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
     CGGradientRef gradient = CGGradientCreateWithColors(space, colors, location); 
@@ -526,7 +531,9 @@ typedef enum {
     
     CGContextRestoreGState(context);
     
-    CGContextSetStrokeColorWithColor(context, YSColorGetFromHex(0xFFFFFF));
+    CGColorRef strokeColor = YSColorCreateWhite();
+    CGContextSetStrokeColorWithColor(context, strokeColor);
+    CGColorRelease(strokeColor);
     CGContextSetLineWidth(context, 1.0);
     
     CGContextAddRect(context, CGRectMake(self.bounds.origin.x + 6/2, self.bounds.origin.y + 6/2, self.bounds.size.width - 12/2, self.bounds.size.height - 12/2));
