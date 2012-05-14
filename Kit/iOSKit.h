@@ -15,6 +15,7 @@
 #import "ELPickerView.h"
 #import "ELSwipeController.h"
 #import "ELUtils.h"
+#import "ELBarButton.h"
 
 #endif
 

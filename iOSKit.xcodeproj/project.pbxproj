@@ -49,7 +49,7 @@
 		9DA4B2511504DDDF00F078D8 /* YSDrawingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F05150168470089FA89 /* YSDrawingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DA4B25C1504EF5700F078D8 /* YSGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F06150168470089FA89 /* YSGeometry.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DA4B25D1504EF5A00F078D8 /* YSGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F08150168470089FA89 /* YSGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9DB5CA1915610570005D370F /* ELBarButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB5CA1715610570005D370F /* ELBarButton.h */; };
+		9DB5CA1915610570005D370F /* ELBarButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB5CA1715610570005D370F /* ELBarButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DB5CA1A15610570005D370F /* ELBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB5CA1815610570005D370F /* ELBarButton.m */; };
 		9DB5CA1B15610570005D370F /* ELBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB5CA1815610570005D370F /* ELBarButton.m */; };
 		9DDAA04415234DAD00F83E59 /* ELUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DDAA04315234DAD00F83E59 /* ELUtils.m */; };
@@ -348,8 +348,8 @@
 				9D6A8EE615015F690089FA89 /* ELInfoView.h in Headers */,
 				9D6A8EE915015F690089FA89 /* ELPanel.h in Headers */,
 				9D6A8EEC15015F690089FA89 /* ELPickerView.h in Headers */,
-				9D6A8EF515015F690089FA89 /* ELSwipeController.h in Headers */,
 				9DB5CA1915610570005D370F /* ELBarButton.h in Headers */,
+				9D6A8EF515015F690089FA89 /* ELSwipeController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

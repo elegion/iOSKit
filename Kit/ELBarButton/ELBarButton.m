@@ -25,10 +25,9 @@
     self = [super initWithFrame:YSRectMakeFromSize(30, 30)];
     if (self) {
         _holder = holder;
-        [self setBackgroundImage:ELImageGetStretchable(@"bar_btn", 5, 10) forState:UIControlStateNormal];
-        [self setBackgroundImage:ELImageGetStretchable(@"bar_btn_active", 5,10) forState:UIControlStateHighlighted];
         [self setImage:image forState:UIControlStateNormal];
         [self setImage:image forState:UIControlStateHighlighted];
+        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     return self;
 }
