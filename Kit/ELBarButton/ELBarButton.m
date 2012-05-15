@@ -21,12 +21,15 @@
 @synthesize selfOffset = _selfOffset;
 @synthesize mode;
 
-- (id)initWithImage:(UIImage *)image andHolder:(id)holder {
+- (id)initWithImage:(NSString *)imageName andHolder:(id)holder {
     self = [super initWithFrame:YSRectMakeFromSize(30, 30)];
     if (self) {
         _holder = holder;
-        [self setImage:image forState:UIControlStateNormal];
-        [self setImage:image forState:UIControlStateHighlighted];
+        [self setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+        UIImage *highlighted = [UIImage imageNamed:[NSString stringWithFormat:@"%@_push", imageName]];
+        if (highlighted) {
+            [self setImage:highlighted forState:UIControlStateHighlighted];
+        }
         self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     }
     return self;

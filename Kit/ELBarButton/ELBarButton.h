@@ -21,7 +21,7 @@ typedef enum {
 @property (nonatomic, assign) id holder;
 @property (nonatomic, assign) NSInteger selfOffset;
 @property (nonatomic, assign) ELBarButtonMode mode; 
-- (id)initWithImage:(UIImage *)image andHolder:(id)holder;
+- (id)initWithImage:(NSString *)imageName andHolder:(id)holder;
 
 - (void)show;
 - (void)hideWithRemove:(BOOL)remove;
