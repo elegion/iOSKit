@@ -49,6 +49,9 @@
 		9DA4B2511504DDDF00F078D8 /* YSDrawingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F05150168470089FA89 /* YSDrawingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DA4B25C1504EF5700F078D8 /* YSGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F06150168470089FA89 /* YSGeometry.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DA4B25D1504EF5A00F078D8 /* YSGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F08150168470089FA89 /* YSGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9DA72F2D157386F1002720FE /* ELSegmentControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DA72F2B157386F1002720FE /* ELSegmentControl.h */; };
+		9DA72F2E157386F1002720FE /* ELSegmentControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DA72F2C157386F1002720FE /* ELSegmentControl.m */; };
+		9DA72F2F157386F1002720FE /* ELSegmentControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DA72F2C157386F1002720FE /* ELSegmentControl.m */; };
 		9DB5CA1915610570005D370F /* ELBarButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB5CA1715610570005D370F /* ELBarButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DB5CA1A15610570005D370F /* ELBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB5CA1815610570005D370F /* ELBarButton.m */; };
 		9DB5CA1B15610570005D370F /* ELBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB5CA1815610570005D370F /* ELBarButton.m */; };
@@ -105,6 +108,8 @@
 		9D6A8F07150168470089FA89 /* YSGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YSGeometry.m; path = "Libraries/Drawing Kit/Drawing Kit/YSGeometry.m"; sourceTree = SOURCE_ROOT; };
 		9D6A8F08150168470089FA89 /* YSGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YSGraphics.h; path = "Libraries/Drawing Kit/Drawing Kit/YSGraphics.h"; sourceTree = SOURCE_ROOT; };
 		9D6A8F09150168470089FA89 /* YSGraphics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YSGraphics.m; path = "Libraries/Drawing Kit/Drawing Kit/YSGraphics.m"; sourceTree = SOURCE_ROOT; };
+		9DA72F2B157386F1002720FE /* ELSegmentControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELSegmentControl.h; sourceTree = "<group>"; };
+		9DA72F2C157386F1002720FE /* ELSegmentControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELSegmentControl.m; sourceTree = "<group>"; };
 		9DB5CA1715610570005D370F /* ELBarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELBarButton.h; sourceTree = "<group>"; };
 		9DB5CA1815610570005D370F /* ELBarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELBarButton.m; sourceTree = "<group>"; };
 		9DDAA04315234DAD00F83E59 /* ELUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ELUtils.m; path = ELUtils/ELUtils.m; sourceTree = "<group>"; };
@@ -172,6 +177,7 @@
 		9D6A8E9B150154190089FA89 /* iOSKit */ = {
 			isa = PBXGroup;
 			children = (
+				9DA72F2A157386F1002720FE /* ELSegmentControl */,
 				9DB5CA16156104D6005D370F /* ELBarButton */,
 				9DDAA03F15234A7500F83E59 /* ELUtils */,
 				9D6A8ECB15015F690089FA89 /* ELIconView */,
@@ -313,6 +319,15 @@
 			path = "Libraries/Drawing Kit/Drawing Kit";
 			sourceTree = SOURCE_ROOT;
 		};
+		9DA72F2A157386F1002720FE /* ELSegmentControl */ = {
+			isa = PBXGroup;
+			children = (
+				9DA72F2B157386F1002720FE /* ELSegmentControl.h */,
+				9DA72F2C157386F1002720FE /* ELSegmentControl.m */,
+			);
+			path = ELSegmentControl;
+			sourceTree = "<group>";
+		};
 		9DB5CA16156104D6005D370F /* ELBarButton */ = {
 			isa = PBXGroup;
 			children = (
@@ -350,6 +365,7 @@
 				9D6A8EEC15015F690089FA89 /* ELPickerView.h in Headers */,
 				9DB5CA1915610570005D370F /* ELBarButton.h in Headers */,
 				9D6A8EF515015F690089FA89 /* ELSwipeController.h in Headers */,
+				9DA72F2D157386F1002720FE /* ELSegmentControl.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,6 +528,7 @@
 				9DDAA04415234DAD00F83E59 /* ELUtils.m in Sources */,
 				9D4B568F1529C9960099017D /* YSFonts.m in Sources */,
 				9DB5CA1A15610570005D370F /* ELBarButton.m in Sources */,
+				9DA72F2E157386F1002720FE /* ELSegmentControl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,6 +547,7 @@
 				9DDAA04515234DAD00F83E59 /* ELUtils.m in Sources */,
 				9D4B56901529C9960099017D /* YSFonts.m in Sources */,
 				9DB5CA1B15610570005D370F /* ELBarButton.m in Sources */,
+				9DA72F2F157386F1002720FE /* ELSegmentControl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
