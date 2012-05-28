@@ -1,5 +1,5 @@
 //
-//  ElSegmentControl.m
+//  ELSegmentControl.m
 //  iOSKit
 //
 //  Created by Yarik Smirnov on 2/13/12.
@@ -68,46 +68,57 @@ static NSString * const _kELItemDictionaryKeyActiveImage    =       @"__active_i
             [_items addObject:itemDict];
             
             [button release];
+            
+            if (index == 0) {
+                _selectedItem = button;
+            }
         }
     }
     return [_items objectAtIndex:index];
 }
 
 - (void)setImage:(UIImage *)image forSegmentAtIndex:(NSInteger)segmentIndex forState:(UIControlState)state {
-    NSMutableDictionary *itemDict = [self itemAtIndex:segmentIndex];
-    UIButton *button = [itemDict objectForKey:_kELItemDictionaryKeyButton];
-    [button setBackgroundImage:image forState:UIControlStateNormal];
-    if (state == UIControlStateNormal) {
-        [itemDict setObject:image forKey:_kELItemDictionaryKeyNormalImage];
-    } else {
-        [itemDict setObject:image forKey:_kELItemDictionaryKeyActiveImage];
+    if (image) {
+        NSMutableDictionary *itemDict = [self itemAtIndex:segmentIndex];
+        UIButton *button = [itemDict objectForKey:_kELItemDictionaryKeyButton];
+        if (state == UIControlStateNormal) {
+            [itemDict setObject:image forKey:_kELItemDictionaryKeyNormalImage];
+            [button setBackgroundImage:image forState:UIControlStateNormal];
+        } else {
+            [itemDict setObject:image forKey:_kELItemDictionaryKeyActiveImage];
+            if (_selectedSegmentIndex == [_items indexOfObject:itemDict]) {
+                [button setBackgroundImage:image forState:UIControlStateNormal];
+            }
+        }
     }
 }
 
 - (void)setTitle:(NSString *)title forSegmentAtIndex:(NSInteger)segmentIndex {
-    NSMutableDictionary *itemDict = [self itemAtIndex:segmentIndex];
-    UIButton *button = [itemDict objectForKey:_kELItemDictionaryKeyButton];
-    [button setTitle:title forState:UIControlStateNormal];
+    if (title) {
+        NSMutableDictionary *itemDict = [self itemAtIndex:segmentIndex];
+        UIButton *button = [itemDict objectForKey:_kELItemDictionaryKeyButton];
+        [button setTitle:title forState:UIControlStateNormal];
+    }
 }
 
 - (void)pressSegment:(id)segment {
-    if (segment == _leftButton) {
-        _selectedSegmentIndex = 0;
-        [_leftButton setBackgroundImage:_leftActive forState:UIControlStateNormal];
-        [_rightButton setBackgroundImage:_rightNormal forState:UIControlStateNormal];
-    } else {
-        _selectedSegmentIndex = 1;
-        [_leftButton setBackgroundImage:_leftNormal forState:UIControlStateNormal];
-        [_rightButton setBackgroundImage:_rightActive forState:UIControlStateNormal];
+    if (segment == _selectedItem) {
+        return;
+    }
+    for (NSMutableDictionary *item in _items) {
+        UIButton *btn = [item objectForKey:_kELItemDictionaryKeyButton];
+        if (btn == segment) {
+            _selectedItem = btn;
+            self.selectedSegmentIndex = [_items indexOfObject:item];
+            [btn setBackgroundImage:[item objectForKey:_kELItemDictionaryKeyActiveImage] forState:UIControlStateNormal];
+        } else {
+            [btn setBackgroundImage:[item objectForKey:_kELItemDictionaryKeyNormalImage] forState:UIControlStateNormal];
+        }
     }
     [self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
 - (void)dealloc {
-    [_leftNormal release];
-    [_rightNormal release];
-    [_leftActive release];
-    [_rightActive release];
     [_items release];
     [super dealloc];
 }

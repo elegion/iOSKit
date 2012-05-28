@@ -11,14 +11,7 @@
 @interface ELSegmentControl : UIControl {
 @private
     NSMutableArray                 *_items;
-    
-    UIButton                *_leftButton;
-    UIButton                *_rightButton;
-    
-    UIImage                 *_leftNormal;
-    UIImage                 *_rightNormal;
-    UIImage                 *_leftActive;
-    UIImage                 *_rightActive;
+    id                              _selectedItem;
 }
 
 @property(nonatomic, assign) NSInteger selectedSegmentIndex;

@@ -9,7 +9,7 @@
 #ifndef Elegion_iOSKit_h
 #define Elegion_iOSKit_h
 
-
+#import "ELSegmentControl.h"
 #import "ELIconView.h"
 #import "ELInfoView.h"
 #import "ELPickerView.h"
