@@ -21,14 +21,17 @@
 @synthesize selfOffset = _selfOffset;
 @synthesize mode;
 
-- (id)initWithImage:(NSString *)imageName andHolder:(id)holder {
+- (id)initWithImage:(UIImage *)image asBackground:(BOOL)background andHolder:(id)holder {
     self = [super initWithFrame:YSRectMakeFromSize(30, 30)];
     if (self) {
         _holder = holder;
-        [self setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-        UIImage *highlighted = [UIImage imageNamed:[NSString stringWithFormat:@"%@_push", imageName]];
-        if (highlighted) {
-            [self setImage:highlighted forState:UIControlStateHighlighted];
+        [self setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
+        self.titleLabel.textColor = [UIColor whiteColor];
+        self.titleLabel.font = ELFontGetHelveticaNeue(12, ELFontStyleBold);
+        if (background) {
+            [self setBackgroundImage:image forState:UIControlStateNormal];
+        } else {
+            [self setImage:image forState:UIControlStateNormal];
         }
         self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     }
