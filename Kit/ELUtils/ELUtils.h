@@ -67,4 +67,10 @@ NSString * ELStringGetByFilteringPhone(NSString *phone);
 
 UIImage * ELImageGetStretchable(NSString *name, CGFloat leftCap, CGFloat topCap);
 
+@interface NSString (iOSKit)
+
+- (BOOL)isEmpty;
+
+@end
+
 #endif
