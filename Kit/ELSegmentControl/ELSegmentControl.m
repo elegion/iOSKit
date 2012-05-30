@@ -29,8 +29,8 @@ static NSString * const _kELItemDictionaryKeyActiveImage    =       @"__active_i
 @synthesize titleShadow = _titleShadow;
 @synthesize shadowOffset = _shadowOffset;
 
-- (id)initWithItems:(NSArray *)items {
-    self = [super initWithFrame:YSRectMakeFromSize(180, 30)];
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
     if (self) {
         self.selectedSegmentIndex = 0;
         
