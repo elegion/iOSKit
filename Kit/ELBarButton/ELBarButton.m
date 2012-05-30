@@ -28,6 +28,7 @@
         [self setTitleShadowColor:[UIColor blackColor] forState:UIControlStateNormal];
         self.titleLabel.textColor = [UIColor whiteColor];
         self.titleLabel.font = ELFontGetHelveticaNeue(12, ELFontStyleBold);
+        self.titleLabel.shadowOffset = CGSizeMake(0, -1);
         if (background) {
             [self setBackgroundImage:image forState:UIControlStateNormal];
         } else {
