@@ -48,13 +48,15 @@
 }
 
 - (void)animateAlpha:(CGFloat)alpha withRemove:(BOOL)remove {
-    [UIView animateWithDuration:0.25 animations:^{
-        self.alpha = alpha;
-    } completion:^(BOOL finished) {
-        if (finished && remove) {
+    [UIView animateWithDuration:0.25 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{ 
+        
+        if (!remove) {
+            self.alpha = alpha;
+        } else {
             [self removeFromSuperview];
         }
-    }];
+
+    } completion:NULL];
 }
 
 @end
