@@ -8,16 +8,16 @@
 #
 
 GIT=`which git`;
-GIT_SERVER="ssh://git.e-legion.com/home/repository/git/";
+GIT_SERVER=`git remote show origin | grep Fetch | awk '{print $3}' | sed 's!iOSKit.git!!g'`;
 
 LIB_DIR="${PROJECT_DIR}/Libraries"
 
-DRAWING_KIT="Drawing Kit";
+DRAWING_KIT="DrawingKit";
 
 checkDependence () {
     
     if [ ! -d "${1}" ]; then  
-        ${GIT} clone --progress ${GIT_SERVER}$2 "${1}" 
+        ${GIT} clone --progress ${GIT_SERVER}$1".git" 
     fi
     
     return 0;
@@ -28,6 +28,6 @@ checkDependence () {
 
 cd ${LIB_DIR};
 
-checkDependence "${DRAWING_KIT}" yariksmirnov 
+checkDependence "${DRAWING_KIT}" 
 
 exit 0;

@@ -103,11 +103,11 @@
 		9D6A8EFC15015FC60089FA89 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9D6A8EFE15015FD00089FA89 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		9D6A8F01150160910089FA89 /* iOSKit-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iOSKit-Prefix.pch"; sourceTree = "<group>"; };
-		9D6A8F05150168470089FA89 /* YSDrawingKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YSDrawingKit.h; path = "Libraries/Drawing Kit/Drawing Kit/YSDrawingKit.h"; sourceTree = SOURCE_ROOT; };
-		9D6A8F06150168470089FA89 /* YSGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YSGeometry.h; path = "Libraries/Drawing Kit/Drawing Kit/YSGeometry.h"; sourceTree = SOURCE_ROOT; };
-		9D6A8F07150168470089FA89 /* YSGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YSGeometry.m; path = "Libraries/Drawing Kit/Drawing Kit/YSGeometry.m"; sourceTree = SOURCE_ROOT; };
-		9D6A8F08150168470089FA89 /* YSGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YSGraphics.h; path = "Libraries/Drawing Kit/Drawing Kit/YSGraphics.h"; sourceTree = SOURCE_ROOT; };
-		9D6A8F09150168470089FA89 /* YSGraphics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YSGraphics.m; path = "Libraries/Drawing Kit/Drawing Kit/YSGraphics.m"; sourceTree = SOURCE_ROOT; };
+		9D6A8F05150168470089FA89 /* YSDrawingKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YSDrawingKit.h; path = Libraries/DrawingKit/Kit/YSDrawingKit.h; sourceTree = SOURCE_ROOT; };
+		9D6A8F06150168470089FA89 /* YSGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YSGeometry.h; path = Libraries/DrawingKit/Kit/YSGeometry.h; sourceTree = SOURCE_ROOT; };
+		9D6A8F07150168470089FA89 /* YSGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YSGeometry.m; path = Libraries/DrawingKit/Kit/YSGeometry.m; sourceTree = SOURCE_ROOT; };
+		9D6A8F08150168470089FA89 /* YSGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YSGraphics.h; path = Libraries/DrawingKit/Kit/YSGraphics.h; sourceTree = SOURCE_ROOT; };
+		9D6A8F09150168470089FA89 /* YSGraphics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YSGraphics.m; path = Libraries/DrawingKit/Kit/YSGraphics.m; sourceTree = SOURCE_ROOT; };
 		9DA72F2B157386F1002720FE /* ELSegmentControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELSegmentControl.h; sourceTree = "<group>"; };
 		9DA72F2C157386F1002720FE /* ELSegmentControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELSegmentControl.m; sourceTree = "<group>"; };
 		9DB5CA1715610570005D370F /* ELBarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELBarButton.h; sourceTree = "<group>"; };
@@ -299,24 +299,18 @@
 		9D6A8F03150168240089FA89 /* Vendors */ = {
 			isa = PBXGroup;
 			children = (
-				9D6A8F04150168470089FA89 /* Drawing Kit */,
+				9D6A8F04150168470089FA89 /* DrawingKit */,
 			);
 			name = Vendors;
 			sourceTree = "<group>";
 		};
-		9D6A8F04150168470089FA89 /* Drawing Kit */ = {
+		9D6A8F04150168470089FA89 /* DrawingKit */ = {
 			isa = PBXGroup;
 			children = (
-				9D6A8F05150168470089FA89 /* YSDrawingKit.h */,
-				9D6A8F06150168470089FA89 /* YSGeometry.h */,
-				9D6A8F07150168470089FA89 /* YSGeometry.m */,
-				9D6A8F08150168470089FA89 /* YSGraphics.h */,
-				9D6A8F09150168470089FA89 /* YSGraphics.m */,
-				9D4B568C1529C9950099017D /* YSFonts.h */,
-				9D4B568D1529C9950099017D /* YSFonts.m */,
+				9DF460CB157F86E6007E4DC9 /* Kit */,
 			);
-			name = "Drawing Kit";
-			path = "Libraries/Drawing Kit/Drawing Kit";
+			name = DrawingKit;
+			path = Libraries/DrawingKit;
 			sourceTree = SOURCE_ROOT;
 		};
 		9DA72F2A157386F1002720FE /* ELSegmentControl */ = {
@@ -344,6 +338,20 @@
 				9DDAA04315234DAD00F83E59 /* ELUtils.m */,
 			);
 			name = ELUtils;
+			sourceTree = "<group>";
+		};
+		9DF460CB157F86E6007E4DC9 /* Kit */ = {
+			isa = PBXGroup;
+			children = (
+				9D6A8F05150168470089FA89 /* YSDrawingKit.h */,
+				9D6A8F06150168470089FA89 /* YSGeometry.h */,
+				9D6A8F07150168470089FA89 /* YSGeometry.m */,
+				9D6A8F08150168470089FA89 /* YSGraphics.h */,
+				9D6A8F09150168470089FA89 /* YSGraphics.m */,
+				9D4B568C1529C9950099017D /* YSFonts.h */,
+				9D4B568D1529C9950099017D /* YSFonts.m */,
+			);
+			path = Kit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
