@@ -1,7 +1,7 @@
 Introduction
 =========================
 
-iOSKit is a Cocoa Touch UI library with **ease-to-use** custom controls, that needs no custom graphics for default usage.
+iOSKit is a Cocoa Touch UI library with **easy-to-use** custom controls, that needs no custom graphics for default usage.
 
 
 Installation
@@ -19,7 +19,7 @@ Quick Start
 1. Link against required frameworks:
     1. **CoreGraphics.framework**
     1. **CoreText.framework**
- 1. Link against iOSKit:
+1. Link against iOSKit:
     1. **libiOSKit.a**
 1. Import the iOSKit headers via `#import <iOSKit/iOSKit.h>`
 1. Build the project to verify installation is successful.
