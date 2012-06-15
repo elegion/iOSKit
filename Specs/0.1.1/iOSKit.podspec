@@ -73,5 +73,5 @@ Pod::Spec.new do |s|
 
   # Finally, specify any Pods that this Pod depends on.
   #
-  s.dependency 'DrawingKit', :podspec => 'https://raw.github.com/yariksmirnov/DrawingKit/master/Specs/0.1.0/DrawingKit.podspec'
+  #s.dependency 'DrawingKit', :podspec => 'https://raw.github.com/yariksmirnov/DrawingKit/master/Specs/0.1.0/DrawingKit.podspec'
 end
