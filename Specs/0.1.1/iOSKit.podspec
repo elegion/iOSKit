@@ -1,16 +1,11 @@
-#
-# Be sure to run `pod spec lint iOSKit.podspec' to ensure this is a
-# valid spec.
-#
-# Remove all comments before submitting the spec.
-#
+# CocoaPods iOSKit specification
 Pod::Spec.new do |s|
   s.name     = 'iOSKit'
   s.version  = '0.1.1'
   s.license  = 'Apache'
   s.summary  = 'Cocoa Touch Library of UI controls and elements'
   s.homepage = 'http://github.com/yariksmirnov/iOSKit'
-  s.author   = { 'Yarik Smirnov' => 'yarikobnch@me.com' }
+  s.author   = { 'Yarik Smirnov' => 'yarikbonch@me.com' }
 
   # Specify the location from where the source should be retreived.
   #
@@ -78,5 +73,5 @@ Pod::Spec.new do |s|
 
   # Finally, specify any Pods that this Pod depends on.
   #
-  # s.dependency 'JSONKit', '~> 1.4'
+  s.dependency 'DrawingKit', :podspec => 'https://raw.github.com/yariksmirnov/DrawingKit/master/Specs/0.1.0/DrawingKit.podspec'
 end
