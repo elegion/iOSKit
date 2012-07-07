@@ -46,6 +46,8 @@
 		9D6A8F0D150168470089FA89 /* YSGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D6A8F07150168470089FA89 /* YSGeometry.m */; };
 		9D6A8F0F150168470089FA89 /* YSGraphics.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D6A8F09150168470089FA89 /* YSGraphics.m */; };
 		9D6A8F10150168470089FA89 /* YSGraphics.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D6A8F09150168470089FA89 /* YSGraphics.m */; };
+		9D73305C15A859B400A3237B /* ELLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D73305A15A859B400A3237B /* ELLabel.m */; };
+		9D73305D15A86A0700A3237B /* ELLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D73305915A859B400A3237B /* ELLabel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DA4B2511504DDDF00F078D8 /* YSDrawingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F05150168470089FA89 /* YSDrawingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DA4B25C1504EF5700F078D8 /* YSGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F06150168470089FA89 /* YSGeometry.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DA4B25D1504EF5A00F078D8 /* YSGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D6A8F08150168470089FA89 /* YSGraphics.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -108,6 +110,8 @@
 		9D6A8F07150168470089FA89 /* YSGeometry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YSGeometry.m; path = Libraries/DrawingKit/Kit/YSGeometry.m; sourceTree = SOURCE_ROOT; };
 		9D6A8F08150168470089FA89 /* YSGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YSGraphics.h; path = Libraries/DrawingKit/Kit/YSGraphics.h; sourceTree = SOURCE_ROOT; };
 		9D6A8F09150168470089FA89 /* YSGraphics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YSGraphics.m; path = Libraries/DrawingKit/Kit/YSGraphics.m; sourceTree = SOURCE_ROOT; };
+		9D73305915A859B400A3237B /* ELLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ELLabel.h; path = Kit/ELLabel/ELLabel.h; sourceTree = SOURCE_ROOT; };
+		9D73305A15A859B400A3237B /* ELLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ELLabel.m; path = Kit/ELLabel/ELLabel.m; sourceTree = SOURCE_ROOT; };
 		9DA72F2B157386F1002720FE /* ELSegmentControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELSegmentControl.h; sourceTree = "<group>"; };
 		9DA72F2C157386F1002720FE /* ELSegmentControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELSegmentControl.m; sourceTree = "<group>"; };
 		9DB5CA1715610570005D370F /* ELBarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELBarButton.h; sourceTree = "<group>"; };
@@ -177,6 +181,7 @@
 		9D6A8E9B150154190089FA89 /* iOSKit */ = {
 			isa = PBXGroup;
 			children = (
+				9D73305315A8591B00A3237B /* ELLabel */,
 				9DA72F2A157386F1002720FE /* ELSegmentControl */,
 				9DB5CA16156104D6005D370F /* ELBarButton */,
 				9DDAA03F15234A7500F83E59 /* ELUtils */,
@@ -313,6 +318,15 @@
 			path = Libraries/DrawingKit;
 			sourceTree = SOURCE_ROOT;
 		};
+		9D73305315A8591B00A3237B /* ELLabel */ = {
+			isa = PBXGroup;
+			children = (
+				9D73305915A859B400A3237B /* ELLabel.h */,
+				9D73305A15A859B400A3237B /* ELLabel.m */,
+			);
+			path = ELLabel;
+			sourceTree = "<group>";
+		};
 		9DA72F2A157386F1002720FE /* ELSegmentControl */ = {
 			isa = PBXGroup;
 			children = (
@@ -372,6 +386,7 @@
 				9D6A8EE915015F690089FA89 /* ELPanel.h in Headers */,
 				9D6A8EEC15015F690089FA89 /* ELPickerView.h in Headers */,
 				9DB5CA1915610570005D370F /* ELBarButton.h in Headers */,
+				9D73305D15A86A0700A3237B /* ELLabel.h in Headers */,
 				9DA72F2D157386F1002720FE /* ELSegmentControl.h in Headers */,
 				9D6A8EF515015F690089FA89 /* ELSwipeController.h in Headers */,
 			);
@@ -537,6 +552,7 @@
 				9D4B568F1529C9960099017D /* YSFonts.m in Sources */,
 				9DB5CA1A15610570005D370F /* ELBarButton.m in Sources */,
 				9DA72F2E157386F1002720FE /* ELSegmentControl.m in Sources */,
+				9D73305C15A859B400A3237B /* ELLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

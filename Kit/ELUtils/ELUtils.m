@@ -74,6 +74,14 @@ NSString * ELStringGetByFilteringPhone(NSString *phone) {
 
 @end
 
+@implementation NSString (Utils)
+
+- (BOOL)isEmpty {
+    return [self length] == 0;
+}
+
+@end
+
 
 UIImage * ELImageGetStretchable(NSString *name, CGFloat leftCap, CGFloat topCap) {
     return [[UIImage imageNamed:name] stretchableImageWithLeftCapWidth:leftCap topCapHeight:topCap];

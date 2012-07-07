@@ -16,6 +16,8 @@
 #import "ELSwipeController.h"
 #import "ELUtils.h"
 #import "ELBarButton.h"
+#import "ELLabel.h"
+
 
 #endif
 
