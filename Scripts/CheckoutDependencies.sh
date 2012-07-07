@@ -8,11 +8,11 @@
 #
 
 GIT=`which git`;
-GIT_SERVER=`git remote show origin | grep Fetch | awk '{print $3}' | sed 's!elegion/iOSKit.git!!g'`;
+GIT_SERVER=`git remote show origin | grep Fetch | awk '{print $3}' | sed 's!iOSKit.git!!g'`;
 
 LIB_DIR="${PROJECT_DIR}/Libraries"
 
-DRAWING_KIT="yariksmirnov/DrawingKit";
+DRAWING_KIT="";
 
 checkDependence () {
     
