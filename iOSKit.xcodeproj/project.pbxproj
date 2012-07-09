@@ -54,6 +54,8 @@
 		9DA72F2D157386F1002720FE /* ELSegmentControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DA72F2B157386F1002720FE /* ELSegmentControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DA72F2E157386F1002720FE /* ELSegmentControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DA72F2C157386F1002720FE /* ELSegmentControl.m */; };
 		9DA72F2F157386F1002720FE /* ELSegmentControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DA72F2C157386F1002720FE /* ELSegmentControl.m */; };
+		9DB169D015AB16A800CE70C2 /* UIView+NSCopying.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB169CE15AB16A800CE70C2 /* UIView+NSCopying.h */; };
+		9DB169D115AB16A800CE70C2 /* UIView+NSCopying.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB169CF15AB16A800CE70C2 /* UIView+NSCopying.m */; };
 		9DB5CA1915610570005D370F /* ELBarButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DB5CA1715610570005D370F /* ELBarButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9DB5CA1A15610570005D370F /* ELBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB5CA1815610570005D370F /* ELBarButton.m */; };
 		9DB5CA1B15610570005D370F /* ELBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DB5CA1815610570005D370F /* ELBarButton.m */; };
@@ -114,6 +116,8 @@
 		9D73305A15A859B400A3237B /* ELLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ELLabel.m; path = Kit/ELLabel/ELLabel.m; sourceTree = SOURCE_ROOT; };
 		9DA72F2B157386F1002720FE /* ELSegmentControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELSegmentControl.h; sourceTree = "<group>"; };
 		9DA72F2C157386F1002720FE /* ELSegmentControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELSegmentControl.m; sourceTree = "<group>"; };
+		9DB169CE15AB16A800CE70C2 /* UIView+NSCopying.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+NSCopying.h"; path = "ELUtils/UICoping/UIView+NSCopying.h"; sourceTree = "<group>"; };
+		9DB169CF15AB16A800CE70C2 /* UIView+NSCopying.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+NSCopying.m"; path = "ELUtils/UICoping/UIView+NSCopying.m"; sourceTree = "<group>"; };
 		9DB5CA1715610570005D370F /* ELBarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ELBarButton.h; sourceTree = "<group>"; };
 		9DB5CA1815610570005D370F /* ELBarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ELBarButton.m; sourceTree = "<group>"; };
 		9DDAA04315234DAD00F83E59 /* ELUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ELUtils.m; path = ELUtils/ELUtils.m; sourceTree = "<group>"; };
@@ -336,6 +340,15 @@
 			path = ELSegmentControl;
 			sourceTree = "<group>";
 		};
+		9DB169CC15AB167200CE70C2 /* UICoping */ = {
+			isa = PBXGroup;
+			children = (
+				9DB169CE15AB16A800CE70C2 /* UIView+NSCopying.h */,
+				9DB169CF15AB16A800CE70C2 /* UIView+NSCopying.m */,
+			);
+			name = UICoping;
+			sourceTree = "<group>";
+		};
 		9DB5CA16156104D6005D370F /* ELBarButton */ = {
 			isa = PBXGroup;
 			children = (
@@ -348,6 +361,7 @@
 		9DDAA03F15234A7500F83E59 /* ELUtils */ = {
 			isa = PBXGroup;
 			children = (
+				9DB169CC15AB167200CE70C2 /* UICoping */,
 				9DDAA04615234DCF00F83E59 /* ELUtils.h */,
 				9DDAA04315234DAD00F83E59 /* ELUtils.m */,
 			);
@@ -389,6 +403,7 @@
 				9D73305D15A86A0700A3237B /* ELLabel.h in Headers */,
 				9DA72F2D157386F1002720FE /* ELSegmentControl.h in Headers */,
 				9D6A8EF515015F690089FA89 /* ELSwipeController.h in Headers */,
+				9DB169D015AB16A800CE70C2 /* UIView+NSCopying.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,6 +568,7 @@
 				9DB5CA1A15610570005D370F /* ELBarButton.m in Sources */,
 				9DA72F2E157386F1002720FE /* ELSegmentControl.m in Sources */,
 				9D73305C15A859B400A3237B /* ELLabel.m in Sources */,
+				9DB169D115AB16A800CE70C2 /* UIView+NSCopying.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
