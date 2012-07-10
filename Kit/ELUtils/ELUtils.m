@@ -76,8 +76,8 @@ NSString * ELStringGetByFilteringPhone(NSString *phone) {
 
 @implementation NSString (Utils)
 
-- (BOOL)isEmpty {
-    return [self length] == 0;
+- (BOOL)notEmpty {
+    return [self length] != 0;
 }
 
 @end

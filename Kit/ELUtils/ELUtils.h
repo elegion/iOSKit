@@ -76,7 +76,7 @@ UIImage * ELImageGetStretchable(NSString *name, CGFloat leftCap, CGFloat topCap)
 
 @interface NSString (iOSKit)
 
-- (BOOL)isEmpty;
+- (BOOL)notEmpty;
 
 @end
 
