@@ -18,6 +18,8 @@
 @synthesize shadowColor = _shadowColor;
 @synthesize shadowOffset = _shadowOffset;
 @synthesize verticalAligment = _verticalAligment;
+@synthesize renderedTextSize;
+
 
 @synthesize font = _font;
 @synthesize ctFont = _ctFont;
@@ -50,11 +52,9 @@
 }
 
 - (void)setTitle:(NSString *)title {
-    if (![title isEmpty]) {
         [_title release];
         _title = [title copy];
         [self setNeedsDisplay];
-    }
 }
 
 - (void)setTitleColor:(UIColor *)titleColor {
@@ -115,6 +115,10 @@
     [self setNeedsDisplay];
 }
 
+- (void)updateFrame:(NSValue *)value {
+    self.frame = [value CGRectValue];
+}
+
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -158,8 +162,7 @@
     CFDictionaryRef tAttributes = CFDictionaryCreate(kCFAllocatorDefault, (const void **)&keys, (const void **)&titleValues, sizeof(keys) / sizeof(keys[0]), &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
     
     CFMutableAttributedStringRef text = CFAttributedStringCreateMutable(kCFAllocatorDefault, 0);
-    CFAttributedStringReplaceString(text, CFRangeMake(0, 0), (CFStringRef)_title);
-    if (![_title isEmpty]) {
+    if ([_title notEmpty]) {
         CFAttributedStringReplaceString(text, CFRangeMake(0, 0), (CFStringRef)_title);
         CFAttributedStringReplaceString(text, CFRangeMake([_title length], 0), (CFStringRef)_text);
         CFAttributedStringSetAttributes(text, CFRangeMake(0, [_title length]), tAttributes, false);
@@ -169,23 +172,25 @@
         CFAttributedStringSetAttributes(text, CFRangeMake(0, [_text length]), attributes, false);
     }
     
-    
     CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(text);
     
     CGSize framesize =  CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, [_text length] + [_title length]), NULL, CGSizeMake(CGRectGetWidth(rect), CGFLOAT_MAX), NULL);
     CGRect frameRect;
+
     
     if (_verticalAligment == ELTextVerticalAligmentBottom) {
         frameRect = rect;
     } else if (_verticalAligment == ELTextVerticalAligmentCenter) {
-        frameRect = CGRectMake(0, rintf(CGRectGetHeight(rect) / 2 - framesize.height / 2) - 3, CGRectGetWidth(rect), framesize.height); 
+        frameRect = CGRectMake(0, rintf(CGRectGetHeight(rect) / 2 - framesize.height / 2) - 3, CGRectGetWidth(rect), framesize.height);
     } else {
         frameRect = CGRectMake(0, CGRectGetHeight(rect) - framesize.height, CGRectGetWidth(rect), framesize.height);
     }
     
+    self.renderedTextSize = framesize;
+    
     CGPathRef path = CGPathCreateWithRect(frameRect, NULL);
     
-    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, [_text length]), path, NULL);
+    CTFrameRef frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, [_text length] + [_title length]), path, NULL);
     
     CGContextSaveGState(context);
     CGContextSetShadowWithColor(context, _shadowOffset, 0, _shadowColor.CGColor);

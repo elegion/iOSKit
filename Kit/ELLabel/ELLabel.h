@@ -36,6 +36,7 @@ typedef int ELTextVerticalAligment;
 @property (nonatomic, assign) ELTextVerticalAligment verticalAligment;
 @property (nonatomic, assign) CGSize  shadowOffset;
 @property (nonatomic, retain) UIColor *shadowColor;
+@property (nonatomic, assign) CGSize  renderedTextSize;
 
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) UIFont *titleFont;
