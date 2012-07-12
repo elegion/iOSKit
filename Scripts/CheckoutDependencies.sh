@@ -12,13 +12,18 @@ GIT_SERVER=`git remote show origin | grep Fetch | awk '{print $3}' | sed 's!iOSK
 
 LIB_DIR="${PROJECT_DIR}/Libraries"
 
-DRAWING_KIT="";
+DRAWING_KIT="DrawingKit";
 
 checkDependence () {
-    
-    if [ ! -d "${1}" ]; then  
-        ${GIT} clone --progress ${GIT_SERVER}$1".git" 
-    fi
+	
+	if [ ! -d "${1}" ]; then
+	   
+		if [ ${GIT_SERVER} = "*github.com*"]; then
+			${GIT} clone --progress ${GIT_SERVER}$1".git"
+		else 
+			${GIT} clone --progress "git://github.com/yariksmirnov/"$1".git" 
+		fi
+	fi
     
     return 0;
 }
