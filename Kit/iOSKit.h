@@ -17,6 +17,7 @@
 #import "ELUtils.h"
 #import "ELBarButton.h"
 #import "ELLabel.h"
+#import "ELCountLine.h"
 
 
 #endif

@@ -61,6 +61,55 @@ NSString * ELStringGetByFilteringPhone(NSString *phone) {
     return [[phone componentsSeparatedByCharactersInSet:[[NSCharacterSet characterSetWithCharactersInString:@"+0123456789-()"] invertedSet]] componentsJoinedByString:@""];
 }
 
+NSString * ELMaskedPhoneNumber(NSString *phone) {
+    NSMutableString *result = [NSMutableString string];
+    BOOL hasPlus = NO;
+    if ([phone rangeOfString:@"+"].length > 0) {
+        hasPlus = YES;
+        phone = [phone substringFromIndex:1];
+    }
+    for (int i = 0; i < [phone length]; i ++) {
+        if (i == 1 && (hasPlus || [phone length] > 7)) {
+            [result appendString:@" ("];
+        }
+        if ((i == 3 || i == 5)&& !hasPlus && [phone length] < 8) {
+            [result appendString:@"-"];
+        }
+        if (i == 4 && (hasPlus || [phone length] > 7)) {
+            [result appendString:@") "];
+        }
+        if ((i == 7 || i == 9) && (hasPlus || [phone length] > 7)) {
+            [result appendString:@"-"];
+        }
+        [result appendString:[phone substringWithRange:NSMakeRange(i, 1)]];
+    }
+    if ([phone length] < 5 && [phone length] > 1 && hasPlus) {
+        for (int j = 0; j < 4 - [phone length]; j++) {
+            [result appendString:@" "];
+        }
+        [result appendString:@")"];
+    }
+    if (hasPlus) {
+        [result insertString:@"+" atIndex:0];
+    }
+    return result;
+}
+
+NSString * ELStringByGroupingNumber(NSNumber *number) {
+    static NSNumberFormatter *nf = nil;
+    if (!nf) {
+        nf = [[NSNumberFormatter alloc] init];
+        [nf setGroupingSize:3];
+        [nf setGroupingSeparator:@" "];
+        [nf setUsesGroupingSeparator:YES];
+        [nf setMaximumFractionDigits:2];
+        [nf setNumberStyle:NSNumberFormatterDecimalStyle];
+        [nf setDecimalSeparator:@","];
+    }
+    
+    return [nf stringFromNumber:number];
+}
+
 
 @implementation UIColor (HexademicalColors)
 

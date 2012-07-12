@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D06FF1715AECC3900787F06 /* ELCountLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D06FF1515AECC3900787F06 /* ELCountLine.h */; };
+		9D06FF1815AECC3900787F06 /* ELCountLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D06FF1615AECC3900787F06 /* ELCountLine.m */; };
 		9D4B568E1529C9960099017D /* YSFonts.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D4B568C1529C9950099017D /* YSFonts.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9D4B568F1529C9960099017D /* YSFonts.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D4B568D1529C9950099017D /* YSFonts.m */; };
 		9D4B56901529C9960099017D /* YSFonts.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D4B568D1529C9950099017D /* YSFonts.m */; };
@@ -75,6 +77,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9D06FF1515AECC3900787F06 /* ELCountLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ELCountLine.h; path = ELCountLine/ELCountLine.h; sourceTree = "<group>"; };
+		9D06FF1615AECC3900787F06 /* ELCountLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ELCountLine.m; path = ELCountLine/ELCountLine.m; sourceTree = "<group>"; };
 		9D4B568C1529C9950099017D /* YSFonts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSFonts.h; sourceTree = "<group>"; };
 		9D4B568D1529C9950099017D /* YSFonts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSFonts.m; sourceTree = "<group>"; };
 		9D6A8E96150154190089FA89 /* libiOSKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libiOSKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -150,6 +154,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9D06FF1B15AECC4500787F06 /* ELCountLine */ = {
+			isa = PBXGroup;
+			children = (
+				9D06FF1515AECC3900787F06 /* ELCountLine.h */,
+				9D06FF1615AECC3900787F06 /* ELCountLine.m */,
+			);
+			name = ELCountLine;
+			sourceTree = "<group>";
+		};
 		9D6A8E8B150154190089FA89 = {
 			isa = PBXGroup;
 			children = (
@@ -185,6 +198,7 @@
 		9D6A8E9B150154190089FA89 /* iOSKit */ = {
 			isa = PBXGroup;
 			children = (
+				9D06FF1B15AECC4500787F06 /* ELCountLine */,
 				9D73305315A8591B00A3237B /* ELLabel */,
 				9DA72F2A157386F1002720FE /* ELSegmentControl */,
 				9DB5CA16156104D6005D370F /* ELBarButton */,
@@ -404,6 +418,7 @@
 				9DA72F2D157386F1002720FE /* ELSegmentControl.h in Headers */,
 				9D6A8EF515015F690089FA89 /* ELSwipeController.h in Headers */,
 				9DB169D015AB16A800CE70C2 /* UIView+NSCopying.h in Headers */,
+				9D06FF1715AECC3900787F06 /* ELCountLine.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -569,6 +584,7 @@
 				9DA72F2E157386F1002720FE /* ELSegmentControl.m in Sources */,
 				9D73305C15A859B400A3237B /* ELLabel.m in Sources */,
 				9DB169D115AB16A800CE70C2 /* UIView+NSCopying.m in Sources */,
+				9D06FF1815AECC3900787F06 /* ELCountLine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

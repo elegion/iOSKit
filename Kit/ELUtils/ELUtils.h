@@ -58,6 +58,10 @@ UIColor * ELColorGetWithHexAndAlpha(NSUInteger hexColor, CGFloat alphaInPercents
 
 NSString * ELStringGetByFilteringPhone(NSString *phone);
 
+NSString * ELMaskedPhoneNumber(NSString *phone);
+
+NSString * ELStringByGroupingNumber(NSNumber *number);
+
 @interface UIColor (HexademicalColors)
 
 + (UIColor *)colorFromHex:(NSUInteger)hex alpha:(CGFloat)alphaInPercentage;
@@ -68,16 +72,11 @@ NSString * ELStringGetByFilteringPhone(NSString *phone);
 
 @interface NSString (Utils)
 
-- (void)isEmpty;
+- (BOOL)notEmpty;
 
 @end
 
 UIImage * ELImageGetStretchable(NSString *name, CGFloat leftCap, CGFloat topCap);
 
-@interface NSString (iOSKit)
-
-- (BOOL)notEmpty;
-
-@end
 
 #endif
