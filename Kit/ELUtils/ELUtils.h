@@ -11,6 +11,7 @@
 
 #import <UIKit/UIKit.h>
 #import "YSFonts.h"
+#import "YSDrawingKit.h"
 
 enum {
     ELFontFamilyNameMarkerFelt = kYSFontFamilyNameMarkerFelt,
@@ -57,6 +58,10 @@ UIColor * ELColorGetWithHexAndAlpha(NSUInteger hexColor, CGFloat alphaInPercents
 
 NSString * ELStringGetByFilteringPhone(NSString *phone);
 
+NSString * ELMaskedPhoneNumber(NSString *phone);
+
+NSString * ELStringByGroupingNumber(NSNumber *number);
+
 @interface UIColor (HexademicalColors)
 
 + (UIColor *)colorFromHex:(NSUInteger)hex alpha:(CGFloat)alphaInPercentage;
@@ -65,12 +70,13 @@ NSString * ELStringGetByFilteringPhone(NSString *phone);
 
 @end
 
-UIImage * ELImageGetStretchable(NSString *name, CGFloat leftCap, CGFloat topCap);
+@interface NSString (Utils)
 
-@interface NSString (iOSKit)
-
-- (BOOL)isEmpty;
+- (BOOL)notEmpty;
 
 @end
+
+UIImage * ELImageGetStretchable(NSString *name, CGFloat leftCap, CGFloat topCap);
+
 
 #endif
